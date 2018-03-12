@@ -1,0 +1,36 @@
+{
+  "name": "webthing-node",
+  "version": "0.1.0",
+  "description": "HTTP Web Thing implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-iot/webthing-node.git"
+  },
+  "keywords": [
+    "mozilla",
+    "iot",
+    "web",
+    "thing",
+    "webthing"
+  ],
+  "author": "Mozilla IoT",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mozilla-iot/webthing-node/issues"
+  },
+  "homepage": "https://github.com/mozilla-iot/webthing-node#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-ws": "^3.0.0",
+    "local-ipv4-address": "^0.0.2"
+  },
+  "devDependencies": {
+    "uuid": "^3.2.1",
+    "eslint": "^4.18.2"
+  }
+}
