@@ -44,6 +44,11 @@ function run_server() {
   thing.addEventDescription('reboot', 'Going down for reboot');
 
   const server = new WebThingServer(thing, 8888);
+
+  process.on('SIGINT', () => {
+    server.stop();
+  });
+
   server.start();
 }
 
