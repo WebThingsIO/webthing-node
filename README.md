@@ -2,6 +2,14 @@
 
 Implementation of an HTTP [Web Thing](https://iot.mozilla.org/wot/).
 
+# Installation
+
+`webthing` can be installed via `npm`, as such:
+
+```shell
+$ npm install webthing
+```
+
 # Example
 
 ```javascript
