@@ -1,6 +1,6 @@
 {
   "name": "webthing",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "HTTP Web Thing implementation",
   "main": "index.js",
   "scripts": {
