@@ -1,4 +1,11 @@
-const {Action, Event, Property, Thing, WebThingServer} = require('./index');
+const {
+  Action,
+  Event,
+  Property,
+  Thing,
+  Value,
+  WebThingServer,
+} = require('../index');
 const uuidv4 = require('uuid/v4');
 
 class OverheatedEvent extends Event {
@@ -29,17 +36,17 @@ function makeThing() {
   thing.addProperty(
     new Property(thing,
                  'on',
+                 new Value(true, () => {}),
                  {type: 'boolean',
-                  description: 'Whether the lamp is turned on'},
-                 true));
+                  description: 'Whether the lamp is turned on'}));
   thing.addProperty(
     new Property(thing,
                  'level',
+                 new Value(50, () => {}),
                  {type: 'number',
                   description: 'The level of light from 0-100',
                   minimum: 0,
-                  maximum: 100},
-                 50));
+                  maximum: 100}));
 
   thing.addAvailableAction(
     'fade',
@@ -64,7 +71,7 @@ function makeThing() {
     'overheated',
     {description: 'The lamp has exceeded its safe operating temperature',
      type: 'number',
-     unit: 'celcius'});
+     unit: 'celsius'});
 
   return thing;
 }
@@ -79,6 +86,7 @@ function runServer() {
 
   process.on('SIGINT', () => {
     server.stop();
+    process.exit();
   });
 
   server.start();
