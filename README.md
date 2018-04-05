@@ -102,7 +102,7 @@ Then we create and add the appropriate properties:
     ```
 
 * `level`: tells us what the sensor is actually reading
-    * Contrary to the light, the value cannot be set via an API call, as it wouldn't make much sense, to SET what a sensor is reading. Therefore, we are utilizing a *readOnly* Value by omitting the `setter` parameter.
+    * Contrary to the light, the value cannot be set via an API call, as it wouldn't make much sense, to SET what a sensor is reading. Therefore, we are utilizing a *readOnly* Value by omitting the `valueForwarder` parameter.
 
     ```javascript
     Map<String, Object> levelDescription = new HashMap<>();
