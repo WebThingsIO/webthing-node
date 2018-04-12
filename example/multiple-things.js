@@ -119,7 +119,7 @@ class FakeGpioHumiditySensor {
     // Poll the sensor reading every 3 seconds
     setInterval(() => {
       // Update the underlying value, which in turn notifies all listeners
-      this.level.notifyOfExternalUpdate(this.readFromGpio());
+      this.level.notifyOfExternalUpdate(this.readFromGPIO());
     }, 3000);
   }
 
