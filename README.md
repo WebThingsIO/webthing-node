@@ -37,7 +37,7 @@ light.addProperty(
   new Property(
     light,
     'on',
-    new Value(true, v => console.log('On-State is now', v)),
+    new Value(true, (v) => console.log('On-State is now', v)),
     {type: 'boolean',
      description: 'Whether the lamp is turned on'}));
 ```

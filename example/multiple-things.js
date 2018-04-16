@@ -42,6 +42,10 @@ class ExampleDimmableLight {
       {description: 'Fade the lamp to a given level',
        input: {
          type: 'object',
+         required: [
+           'level',
+           'duration',
+         ],
          properties: {
            level: {
              type: 'number',
@@ -70,7 +74,7 @@ class ExampleDimmableLight {
     return new Property(
       this.thing,
       'on',
-      new Value(true, v => console.log('On-State is now', v)),
+      new Value(true, (v) => console.log('On-State is now', v)),
       {type: 'boolean',
        description: 'Whether the lamp is turned on'});
   }
@@ -79,7 +83,7 @@ class ExampleDimmableLight {
     return new Property(
       this.thing,
       'level',
-      new Value(50, l => console.log('New light level is', l)),
+      new Value(50, (l) => console.log('New light level is', l)),
       {type: 'number',
        description: 'The level of light from 0-100',
        minimum: 0,

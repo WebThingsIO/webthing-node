@@ -53,6 +53,10 @@ function makeThing() {
     {description: 'Fade the lamp to a given level',
      input: {
        type: 'object',
+       required: [
+         'level',
+         'duration',
+       ],
        properties: {
          level: {
            type: 'number',
