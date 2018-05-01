@@ -31,7 +31,7 @@ class FadeAction extends Action {
 }
 
 function makeThing() {
-  const thing = new Thing('My Lamp', 'thing', 'A web connected lamp');
+  const thing = new Thing('My Lamp', 'dimmableLight', 'A web connected lamp');
 
   thing.addProperty(
     new Property(thing,

@@ -33,11 +33,11 @@ class FadeAction extends Action {
 /**
  * A dimmable light that logs received commands to stdout.
  */
-class ExampleDimmableLight {
+class ExampleDimmableLight extends Thing {
   constructor() {
-    this.thing = new Thing('My Lamp', 'dimmableLight', 'A web connected lamp');
+    super('My Lamp', 'dimmableLight', 'A web connected lamp');
 
-    this.thing.addAvailableAction(
+    this.addAvailableAction(
       'fade',
       {description: 'Fade the lamp to a given level',
        input: {
@@ -60,19 +60,19 @@ class ExampleDimmableLight {
        }},
       FadeAction);
 
-    this.thing.addAvailableEvent(
+    this.addAvailableEvent(
       'overheated',
       {description: 'The lamp has exceeded its safe operating temperature',
        type: 'number',
        unit: 'celsius'});
 
-    this.thing.addProperty(this.getOnProperty());
-    this.thing.addProperty(this.getLevelProperty());
+    this.addProperty(this.getOnProperty());
+    this.addProperty(this.getLevelProperty());
   }
 
   getOnProperty() {
     return new Property(
-      this.thing,
+      this,
       'on',
       new Value(true, (v) => console.log('On-State is now', v)),
       {type: 'boolean',
@@ -81,7 +81,7 @@ class ExampleDimmableLight {
 
   getLevelProperty() {
     return new Property(
-      this.thing,
+      this,
       'level',
       new Value(50, (l) => console.log('New light level is', l)),
       {type: 'number',
@@ -89,31 +89,27 @@ class ExampleDimmableLight {
        minimum: 0,
        maximum: 100});
   }
-
-  getThing() {
-    return this.thing;
-  }
 }
 
 /**
  * A humidity sensor which updates its measurement every few seconds.
  */
-class FakeGpioHumiditySensor {
+class FakeGpioHumiditySensor extends Thing {
   constructor() {
-    this.thing = new Thing('My Humidity Sensor',
-                           'multiLevelSensor',
-                           'A web connected humidity sensor');
+    super('My Humidity Sensor',
+          'multiLevelSensor',
+          'A web connected humidity sensor');
 
-    this.thing.addProperty(
-      new Property(this.thing,
+    this.addProperty(
+      new Property(this,
                    'on',
                    new Value(true),
                    {type: 'boolean',
                     description: 'Whether the sensor is on'}));
 
     this.level = new Value(0.0);
-    this.thing.addProperty(
-      new Property(this.thing,
+    this.addProperty(
+      new Property(this,
                    'level',
                    this.level,
                    {type: 'number',
@@ -133,18 +129,14 @@ class FakeGpioHumiditySensor {
   readFromGPIO() {
     return 70.0 * Math.random() * (-0.5 + Math.random());
   }
-
-  getThing() {
-    return this.thing;
-  }
 }
 
 function runServer() {
   // Create a thing that represents a dimmable light
-  const light = new ExampleDimmableLight().getThing();
+  const light = new ExampleDimmableLight();
 
   // Create a thing that represents a humidity sensor
-  const sensor = new FakeGpioHumiditySensor().getThing();
+  const sensor = new FakeGpioHumiditySensor();
 
   // If adding more than one thing here, be sure to set the second
   // parameter to some string, which will be broadcast via mDNS.
