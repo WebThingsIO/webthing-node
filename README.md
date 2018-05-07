@@ -38,8 +38,10 @@ light.addProperty(
     light,
     'on',
     new Value(true, (v) => console.log('On-State is now', v)),
-    {type: 'boolean',
-     description: 'Whether the lamp is turned on'}));
+    {
+      type: 'boolean',
+      description: 'Whether the lamp is turned on',
+    }));
 ```
 
 The **`level`** property reports the brightness level of the light and sets the level. Like before, instead of actually setting the level of a light, we just log the level to std::out.
@@ -50,10 +52,12 @@ light.addProperty(
     light,
     'level',
     new Value(50, l => console.log('New light level is', l)),
-    {type: 'number',
-     description: 'The level of light from 0-100',
-     minimum: 0,
-     maximum: 100}));
+    {
+      type: 'number',
+      description: 'The level of light from 0-100',
+      minimum: 0,
+      maximum: 100,
+    }));
 ```
 
 Now we can add our newly created thing to the server and start it:
@@ -97,8 +101,10 @@ Then we create and add the appropriate properties:
         sensor,
         'on',
         new Value(true),
-        {type: 'boolean',
-         description: 'Whether the sensor is on'}));
+        {
+          type: 'boolean',
+          description: 'Whether the sensor is on',
+        }));
     ```
 
 * `level`: tells us what the sensor is actually reading
@@ -117,9 +123,11 @@ Then we create and add the appropriate properties:
         sensor,
         'level',
         level,
-        {type: 'number',
-         description: 'The current humidity in %',
-         unit: '%'}));
+        {
+          type: 'number',
+          description: 'The current humidity in %',
+          unit: '%',
+        }));
     ```
 
 Now we have a sensor that constantly reports 0%. To make it usable, we need a thread or some kind of input when the sensor has a new reading available. For this purpose we start a thread that queries the physical sensor every few seconds. For our purposes, it just calls a fake method.
@@ -127,7 +135,7 @@ Now we have a sensor that constantly reports 0%. To make it usable, we need a th
 ```javascript
 // Poll the sensor reading every 3 seconds
 setInterval(() => {
-    // Update the underlying value, which in turn notifies all listeners
+  // Update the underlying value, which in turn notifies all listeners
   level.notifyOfExternalUpdate(readFromGPIO());
 }, 3000);
 ```

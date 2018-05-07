@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# run eslint first
+npm run lint
+
 # clone the webthing-tester
 git clone https://github.com/mozilla-iot/webthing-tester
 pip3 install --user -r webthing-tester/requirements.txt

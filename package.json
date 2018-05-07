@@ -4,6 +4,7 @@
   "description": "HTTP Web Thing implementation",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -32,7 +33,8 @@
     "local-ipv4-address": "^0.0.2"
   },
   "devDependencies": {
-    "uuid": "^3.2.1",
-    "eslint": "^4.18.2"
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.18.2",
+    "uuid": "^3.2.1"
   }
 }

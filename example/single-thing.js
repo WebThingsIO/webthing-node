@@ -50,25 +50,27 @@ function makeThing() {
 
   thing.addAvailableAction(
     'fade',
-    {description: 'Fade the lamp to a given level',
-     input: {
-       type: 'object',
-       required: [
-         'level',
-         'duration',
-       ],
-       properties: {
-         level: {
-           type: 'number',
-           minimum: 0,
-           maximum: 100,
-         },
-         duration: {
-           type: 'number',
-           unit: 'milliseconds',
-         },
-       },
-     }},
+    {
+      description: 'Fade the lamp to a given level',
+      input: {
+        type: 'object',
+        required: [
+          'level',
+          'duration',
+        ],
+        properties: {
+          level: {
+            type: 'number',
+            minimum: 0,
+            maximum: 100,
+          },
+          duration: {
+            type: 'number',
+            unit: 'milliseconds',
+          },
+        },
+      },
+    },
     FadeAction);
 
   thing.addAvailableEvent(
