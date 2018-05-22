@@ -2,6 +2,7 @@ const {
   Action,
   Event,
   Property,
+  SingleThing,
   Thing,
   Value,
   WebThingServer,
@@ -85,10 +86,9 @@ function makeThing() {
 function runServer() {
   const thing = makeThing();
 
-  // If adding more than one thing here, be sure to set the second
-  // parameter to some string, which will be broadcast via mDNS.
+  // If adding more than one thing, use MultipleThings() with a name.
   // In the single thing case, the thing's name will be broadcast.
-  const server = new WebThingServer([thing], null, 8888);
+  const server = new WebThingServer(new SingleThing(thing), 8888);
 
   process.on('SIGINT', () => {
     server.stop();

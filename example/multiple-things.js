@@ -1,6 +1,7 @@
 const {
   Action,
   Event,
+  MultipleThings,
   Property,
   Thing,
   Value,
@@ -140,11 +141,10 @@ function runServer() {
   // Create a thing that represents a humidity sensor
   const sensor = new FakeGpioHumiditySensor();
 
-  // If adding more than one thing here, be sure to set the second
-  // parameter to some string, which will be broadcast via mDNS.
+  // If adding more than one thing, use MultipleThings() with a name.
   // In the single thing case, the thing's name will be broadcast.
-  const server = new WebThingServer([light, sensor],
-                                    'LightAndTempDevice',
+  const server = new WebThingServer(new MultipleThings([light, sensor],
+                                                       'LightAndTempDevice'),
                                     8888);
 
   process.on('SIGINT', () => {

@@ -66,10 +66,9 @@ light.addProperty(
 Now we can add our newly created thing to the server and start it:
 
 ```javascript
-// If adding more than one thing here, be sure to set the second
-// parameter to some string, which will be broadcast via mDNS.
+// If adding more than one thing, use MultipleThings() with a name.
 // In the single thing case, the thing's name will be broadcast.
-const server = new WebThingServer([light], null, 8888);
+const server = new WebThingServer(SingleThing(light), 8888);
 
 process.on('SIGINT', () => {
   server.stop();
