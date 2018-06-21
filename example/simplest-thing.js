@@ -9,8 +9,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.*
  */
 const {
-  Action,
-  Event,
   Property,
   SingleThing,
   Thing,
@@ -19,23 +17,23 @@ const {
 } = require('../index');
 
 function makeThing() {
-  const thing = new Thing('ActuatorExample', 'onOffSwitch', 'An actuator example that just log');
+  const thing = new Thing('ActuatorExample',
+                          'onOffSwitch',
+                          'An actuator example that just log');
 
-  const value = new Value(true, function(update) {
-    console.log("change: " + update);
-  });
   thing.addProperty(
     new Property(thing,
                  'on',
-                 value,
+                 new Value(true, (update) => console.log(`change: ${update}`)),
                  {type: 'boolean',
                   description: 'Whether the output is changed'}));
   return thing;
 }
 
-function main() {
+function runServer() {
   const port = process.argv[2] ? Number(process.argv[2]) : 8888;
   const url = `http://localhost:${port}/properties/on`;
+
   console.log(`Usage:\n
 ${process.argv[0]} ${process.argv[1]} [port]
 
@@ -52,4 +50,4 @@ curl -X PUT -H 'Content-Type: application/json' --data '{"on": true }' ${url}
   server.start();
 }
 
-main();
+runServer();
