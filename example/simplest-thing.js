@@ -18,15 +18,19 @@ const {
 
 function makeThing() {
   const thing = new Thing('ActuatorExample',
-                          'onOffSwitch',
+                          ['OnOffSwitch'],
                           'An actuator example that just log');
 
   thing.addProperty(
     new Property(thing,
                  'on',
                  new Value(true, (update) => console.log(`change: ${update}`)),
-                 {type: 'boolean',
-                  description: 'Whether the output is changed'}));
+                 {
+                   '@type': 'OnOffProperty',
+                   label: 'On/Off',
+                   type: 'boolean',
+                   description: 'Whether the output is changed',
+                 }));
   return thing;
 }
 
