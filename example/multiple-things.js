@@ -23,7 +23,7 @@ class FadeAction extends Action {
   performAction() {
     return new Promise((resolve) => {
       setTimeout(() => {
-        this.thing.setProperty('level', this.input.level);
+        this.thing.setProperty('brightness', this.input.brightness);
         this.thing.addEvent(new OverheatedEvent(this.thing, 102));
         resolve();
       }, this.input.duration);
@@ -36,26 +36,56 @@ class FadeAction extends Action {
  */
 class ExampleDimmableLight extends Thing {
   constructor() {
-    super('My Lamp', 'dimmableLight', 'A web connected lamp');
+    super('My Lamp', ['OnOffSwitch', 'Light'], 'A web connected lamp');
+
+    this.addProperty(
+      new Property(
+        this,
+        'on',
+        new Value(true, (v) => console.log('On-State is now', v)),
+        {
+          '@type': 'OnOffProperty',
+          label: 'On/Off',
+          type: 'boolean',
+          description: 'Whether the lamp is turned on',
+        }));
+
+    this.addProperty(
+      new Property(
+        this,
+        'brightness',
+        new Value(50, (v) => console.log('Brightness is now', v)),
+        {
+          '@type': 'BrightnessProperty',
+          label: 'Brightness',
+          type: 'number',
+          description: 'The level of light from 0-100',
+          minimum: 0,
+          maximum: 100,
+          unit: 'percent',
+        }));
 
     this.addAvailableAction(
       'fade',
       {
+        label: 'Fade',
         description: 'Fade the lamp to a given level',
         input: {
           type: 'object',
           required: [
-            'level',
+            'brightness',
             'duration',
           ],
           properties: {
-            level: {
+            brightness: {
               type: 'number',
               minimum: 0,
               maximum: 100,
+              unit: 'percent',
             },
             duration: {
               type: 'number',
+              minimum: 1,
               unit: 'milliseconds',
             },
           },
@@ -65,32 +95,11 @@ class ExampleDimmableLight extends Thing {
 
     this.addAvailableEvent(
       'overheated',
-      {description: 'The lamp has exceeded its safe operating temperature',
-       type: 'number',
-       unit: 'celsius'});
-
-    this.addProperty(this.getOnProperty());
-    this.addProperty(this.getLevelProperty());
-  }
-
-  getOnProperty() {
-    return new Property(
-      this,
-      'on',
-      new Value(true, (v) => console.log('On-State is now', v)),
-      {type: 'boolean',
-       description: 'Whether the lamp is turned on'});
-  }
-
-  getLevelProperty() {
-    return new Property(
-      this,
-      'level',
-      new Value(50, (l) => console.log('New light level is', l)),
-      {type: 'number',
-       description: 'The level of light from 0-100',
-       minimum: 0,
-       maximum: 100});
+      {
+        description: 'The lamp has exceeded its safe operating temperature',
+        type: 'number',
+        unit: 'celsius',
+      });
   }
 }
 
@@ -100,29 +109,31 @@ class ExampleDimmableLight extends Thing {
 class FakeGpioHumiditySensor extends Thing {
   constructor() {
     super('My Humidity Sensor',
-          'multiLevelSensor',
+          ['MultiLevelSensor'],
           'A web connected humidity sensor');
-
-    this.addProperty(
-      new Property(this,
-                   'on',
-                   new Value(true),
-                   {type: 'boolean',
-                    description: 'Whether the sensor is on'}));
 
     this.level = new Value(0.0);
     this.addProperty(
-      new Property(this,
-                   'level',
-                   this.level,
-                   {type: 'number',
-                    description: 'The current humidity in %',
-                    unit: '%'}));
+      new Property(
+        this,
+        'level',
+        this.level,
+        {
+          '@type': 'LevelProperty',
+          label: 'Humidity',
+          type: 'number',
+          description: 'The current humidity in %',
+          minimum: 0,
+          maximum: 100,
+          unit: 'percent',
+        }));
 
     // Poll the sensor reading every 3 seconds
     setInterval(() => {
       // Update the underlying value, which in turn notifies all listeners
-      this.level.notifyOfExternalUpdate(this.readFromGPIO());
+      const newLevel = this.readFromGPIO();
+      console.log('setting new humidity level:', newLevel);
+      this.level.notifyOfExternalUpdate(newLevel);
     }, 3000);
   }
 
@@ -130,7 +141,7 @@ class FakeGpioHumiditySensor extends Thing {
    * Mimic an actual sensor updating its reading every couple seconds.
    */
   readFromGPIO() {
-    return 70.0 * Math.random() * (-0.5 + Math.random());
+    return Math.abs(70.0 * Math.random() * (-0.5 + Math.random()));
   }
 }
 
