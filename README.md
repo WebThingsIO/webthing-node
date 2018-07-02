@@ -1,6 +1,7 @@
 # webthing
 
 [![Build Status](https://travis-ci.org/mozilla-iot/webthing-node.svg?branch=master)](https://travis-ci.org/mozilla-iot/webthing-node)
+[![NPM](https://img.shields.io/npm/v/webthing.svg)](https://www.npmjs.com/package/webthing)
 [![license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 
 Implementation of an HTTP [Web Thing](https://iot.mozilla.org/wot/).
