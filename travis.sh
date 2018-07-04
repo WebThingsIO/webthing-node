@@ -7,6 +7,7 @@ npm run lint
 git clone https://github.com/mozilla-iot/webthing-tester
 pip3 install --user -r webthing-tester/requirements.txt
 
+export NODE_PATH=.
 # build and test the single-thing example
 node example/single-thing.js &
 EXAMPLE_PID=$!

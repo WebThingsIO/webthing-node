@@ -2,10 +2,10 @@
   "name": "webthing",
   "version": "0.7.0",
   "description": "HTTP Web Thing implementation",
-  "main": "index.js",
+  "main": "webthing.js",
   "scripts": {
     "lint": "eslint .",
-    "start": "node example/multiple-things",
+    "start": "NODE_PATH=. node example/multiple-things",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

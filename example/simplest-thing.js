@@ -14,7 +14,7 @@ const {
   Thing,
   Value,
   WebThingServer,
-} = require('../index');
+} = require('webthing');
 
 function makeThing() {
   const thing = new Thing('ActuatorExample',
