@@ -1,0 +1,11 @@
+[Unit]
+Description=webthing-node
+After=network.target
+
+[Service]
+WorkingDirectory=/usr/local/src/webthing-node
+ExecStart=/usr/bin/npm start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
