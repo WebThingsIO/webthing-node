@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
+    "start": "node example/multiple-things",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
