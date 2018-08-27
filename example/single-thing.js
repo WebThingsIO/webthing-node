@@ -6,7 +6,7 @@ const {
   Thing,
   Value,
   WebThingServer,
-} = require('../index');
+} = require('webthing');
 const uuidv4 = require('uuid/v4');
 
 class OverheatedEvent extends Event {

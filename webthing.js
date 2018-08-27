@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   Action: require('./lib/action'),
   Event: require('./lib/event'),
