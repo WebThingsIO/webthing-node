@@ -1,0 +1,7 @@
+Dockerfile
+.git/
+#.gitignore contents:
+*~
+*.swp
+*.tgz
+node_modules/
