@@ -1,0 +1,33 @@
+{
+  "name": "board-webthings",
+  "version": "0.0.0",
+  "description": "Various Single Board computers's I/O implemented as webthings",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_PATH=.:../.. node index",
+    "flex-phat": "NODE_PATH=.:../.. node index flex-phat",
+    "play-phat": "NODE_PATH=.:../.. node index play-phat"
+  },
+  "author": "Philippe Coval <p.coval@samsung.com>",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rzr/webthing-iotjs.git"
+  },
+  "keywords": [
+    "webthing",
+    "wot",
+    "raspberry-pi",
+    "ARTIK"
+  ],
+  "bugs": {
+    "url": "https://github.com/rzr/webthing-iotjs/issues"
+  },
+  "bin": {
+    "board-webthings": "./index.js"
+  },
+  "homepage": "https://github.com/rzr/webthing-iotjs",
+  "dependencies": {
+    "gpio": "^0.2.9"
+  }
+}
