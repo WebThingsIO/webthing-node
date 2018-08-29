@@ -53,7 +53,7 @@ class ARTIK530Thing extends Thing {
   }
 }
 
-module.exports = () => {
+module.exports = function() {
   if (!module.exports.instance) {
     module.exports.instance = new ARTIK530Thing();
   }
