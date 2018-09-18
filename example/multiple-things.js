@@ -126,6 +126,7 @@ class FakeGpioHumiditySensor extends Thing {
           minimum: 0,
           maximum: 100,
           unit: 'percent',
+          readOnly: true,
         }));
 
     // Poll the sensor reading every 3 seconds
