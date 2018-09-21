@@ -26,12 +26,12 @@
   },
   "homepage": "https://github.com/mozilla-iot/webthing-node#readme",
   "dependencies": {
-    "ajv": "^6.5.2",
+    "ajv": "^6.5.3",
     "body-parser": "^1.18.3",
     "dnssd": "^0.4.1",
     "express": "^4.16.3",
     "express-ws": "^4.0.0",
-    "local-ipv4-address": "^0.0.2"
+    "internal-ip": "^3.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
