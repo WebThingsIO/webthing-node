@@ -12,7 +12,7 @@ export NODE_PATH=.
 node example/single-thing.js &
 EXAMPLE_PID=$!
 sleep 5
-./webthing-tester/test-client.py
+./webthing-tester/test-client.py --debug
 kill -15 $EXAMPLE_PID
 
 # build and test the multiple-things example
