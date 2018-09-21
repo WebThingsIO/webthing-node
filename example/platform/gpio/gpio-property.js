@@ -76,6 +76,7 @@ class GpioInProperty extends Property {
             '@type': 'BooleanProperty',
             label: (metadata && metadata.label) || `On/Off: ${name}`,
             type: 'boolean',
+            readOnly: true,
             description:
             (metadata && metadata.description) ||
               (`GPIO Sensor on pin=${config.pin}`),

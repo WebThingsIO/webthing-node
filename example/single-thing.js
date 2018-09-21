@@ -39,7 +39,7 @@ function makeThing() {
   thing.addProperty(
     new Property(thing,
                  'on',
-                 new Value(true, () => {}),
+                 new Value(true),
                  {
                    '@type': 'OnOffProperty',
                    label: 'On/Off',
@@ -49,7 +49,7 @@ function makeThing() {
   thing.addProperty(
     new Property(thing,
                  'brightness',
-                 new Value(50, () => {}),
+                 new Value(50),
                  {
                    '@type': 'BrightnessProperty',
                    label: 'Brightness',
