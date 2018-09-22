@@ -45,7 +45,7 @@ Try:\ncurl -H "Accept: application/json" ${url}\
     log(`log: board: ${board}: Stopped`);
     process.exit();
   });
-  server.start();
+  server.start().catch(console.error);
   log(`log: board: ${board}: Started`);
 }
 

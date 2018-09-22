@@ -83,7 +83,7 @@ process.on('SIGINT', () => {
   process.exit();
 });
 
-server.start();
+server.start().catch(console.error);
 ```
 
 This will start the server, making the light available via the WoT REST API and announcing it as a discoverable resource on your local network via mDNS.
