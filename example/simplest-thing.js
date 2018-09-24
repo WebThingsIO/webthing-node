@@ -51,7 +51,7 @@ curl -X PUT -H 'Content-Type: application/json' --data '{"on": true }' ${url}
     server.stop();
     process.exit();
   });
-  server.start();
+  server.start().catch(console.error);
 }
 
 runServer();
