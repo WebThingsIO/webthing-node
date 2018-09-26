@@ -14,6 +14,7 @@ const {
   Thing,
 } = require('webthing');
 
+const AdcProperty = require('../adc/adc-property');
 const GpioProperty = require('../gpio/gpio-property');
 
 class ARTIK530Thing extends Thing {
@@ -22,7 +23,7 @@ class ARTIK530Thing extends Thing {
           type || [],
           description || 'A web connected ARTIK530 or ARTIK720');
     const _this = this;
-    this.gpioProperties = [
+    this.pinProperties = [
       new GpioProperty(this, 'RedLED', false,
                        {description:
                              'Red LED on interposer board (on GPIO28)'},
@@ -40,14 +41,24 @@ class ARTIK530Thing extends Thing {
                        {description:
                              'SW404 Button: Next to blue LED (on GPIO32)'},
                        {direction: 'in', pin: 32}),
+      new AdcProperty(this, 'ADC0', 0,
+                      {description: 'Analog port of ARTIK05x'},
+                      {direction: 'in',
+                       device: '/sys/bus/platform/devices\
+/c0053000.adc/iio:device0/in_voltage0_raw'}),
+      new AdcProperty(this, 'ADC1', 0,
+                      {description: 'Analog port of ARTIK05x'},
+                      {direction: 'in',
+                       device: '/sys/bus/platform/devices/\
+c0053000.adc/iio:device0/in_voltage1_raw'}),
     ];
-    this.gpioProperties.forEach((property) => {
+    this.pinProperties.forEach((property) => {
       _this.addProperty(property);
     });
   }
 
   close() {
-    this.gpioProperties.forEach((property) => {
+    this.pinProperties.forEach((property) => {
       property.close && property.close();
     });
   }
