@@ -21,7 +21,7 @@ version: "2"
 services:
   web:
     build: .
-    command: /usr/local/bin/npm run start
+    command: start
     volumes:
       - /usr/local/webthing-node/webthing-node
     ports:
