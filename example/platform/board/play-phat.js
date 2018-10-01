@@ -21,7 +21,7 @@ class PlayPHatThing extends Thing {
     super(name || 'PlayPHat',
           type || [],
           description || 'A web connected Play RaspberryPi Hat');
-    const _this = this;
+    const self = this;
     this.gpioProperties = [
       new GpioProperty(this, 'Left', false,
                        {description:
@@ -57,7 +57,7 @@ class PlayPHatThing extends Thing {
                        {direction: 'in', pin: 6}),
     ];
     this.gpioProperties.forEach((property) => {
-      _this.addProperty(property);
+      self.addProperty(property);
     });
   }
 

@@ -22,7 +22,7 @@ class ARTIK530Thing extends Thing {
     super(name || 'ARTIK530',
           type || [],
           description || 'A web connected ARTIK530 or ARTIK720');
-    const _this = this;
+    const self = this;
     this.pinProperties = [
       new GpioProperty(this, 'RedLED', false,
                        {description:
@@ -53,7 +53,7 @@ class ARTIK530Thing extends Thing {
 c0053000.adc/iio:device0/in_voltage1_raw'}),
     ];
     this.pinProperties.forEach((property) => {
-      _this.addProperty(property);
+      self.addProperty(property);
     });
   }
 
