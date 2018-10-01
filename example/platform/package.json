@@ -28,6 +28,6 @@
   },
   "homepage": "https://github.com/rzr/webthing-iotjs",
   "dependencies": {
-    "gpio": "^0.2.9"
+    "gpio": "^0.2.10"
   }
 }
