@@ -5,6 +5,7 @@
   "main": "webthing.js",
   "scripts": {
     "lint": "eslint .",
+    "node": "NODE_PATH=. node",
     "start": "NODE_PATH=. node example/multiple-things",
     "test": "make test",
     "simplest": "NODE_PATH=. node example/simplest-thing"
