@@ -32,12 +32,12 @@ class ARTIK530Thing extends Thing {
                        {description:
                              'Blue LED on interposer board (on GPIO38)'},
                        {direction: 'out', pin: 38}),
-      new GpioProperty(this, 'Up', false,
+      new GpioProperty(this, 'Up', true,
                        {description:
                              'SW403 Button: Nearest board edge,\
  next to red LED (on GPIO30)'},
                        {direction: 'in', pin: 30}),
-      new GpioProperty(this, 'Down', false,
+      new GpioProperty(this, 'Down', true,
                        {description:
                              'SW404 Button: Next to blue LED (on GPIO32)'},
                        {direction: 'in', pin: 32}),
