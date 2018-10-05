@@ -21,7 +21,7 @@ class FlexPHatThing extends Thing {
     super(name || 'FlexPHat',
           type || [],
           description || 'A web connected Flex RaspberryPi Hat');
-    const _this = this;
+    const self = this;
     this.gpioProperties = [
       new GpioProperty(this, 'Relay', false,
                        {description:
@@ -49,7 +49,7 @@ class FlexPHatThing extends Thing {
                        {direction: 'in', pin: 23}),
     ];
     this.gpioProperties.forEach((property) => {
-      _this.addProperty(property);
+      self.addProperty(property);
     });
   }
 
