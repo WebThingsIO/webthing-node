@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "NODE_PATH=. node example/multiple-things",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "make test",
     "simplest": "NODE_PATH=. node example/simplest-thing"
   },
   "repository": {
