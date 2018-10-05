@@ -14,6 +14,7 @@ const console = require('console');
 
 // Disable logs here by editing to '!console.log'
 const log = console.log || function() {};
+const verbose = !console.log || function() {};
 
 const {
   Property,
@@ -24,9 +25,7 @@ const adc = require('../adc');
 
 class AdcInProperty extends Property {
   constructor(thing, name, value, metadata, config) {
-    const valueObject = new Value(Number(value), () => {
-    });
-    super(thing, name, valueObject,
+    super(thing, name, new Value(Number(value)),
           {
             '@type': 'LevelProperty',
             label: (metadata && metadata.label) || `Level: ${name}`,
@@ -37,12 +36,11 @@ class AdcInProperty extends Property {
               (`ADC Sensor on pin=${config.pin}`),
           });
     const self = this;
-    this.valueObject = valueObject;
     config.frequency = config.frequency || 1;
-    config.range = config.range || 4096;
+    config.range = config.range || 0xFFF;
     this.period = 1000.0 / config.frequency;
     this.config = config;
-    this.port = adc.open(config, function(err) {
+    this.port = adc.open(config, (err) => {
       log(`log: ADC: ${self.getName()}: open: ${err} (null expected)`);
       if (err) {
         console.error(`errror: ADC: ${self.getName()}: Fail to open:\
@@ -51,12 +49,12 @@ class AdcInProperty extends Property {
       }
       self.inverval = setInterval(() => {
         let value = self.port.readSync();
-        log(`log: ADC:\
+        verbose(`log: ADC:\
  ${self.getName()}: update: 0x${Number(value).toString(0xF)}`);
         value = Number(Math.floor(100.0 * value / self.config.range));
         if (value !== self.lastValue) {
           log(`log: ADC: ${self.getName()}: change: ${value}%`);
-          self.valueObject.notifyOfExternalUpdate(value);
+          self.value.notifyOfExternalUpdate(value);
           self.lastValue = value;
         }
       }, self.period);
