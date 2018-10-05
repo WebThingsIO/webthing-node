@@ -71,3 +71,13 @@ play-phat/%: ${main_src} /sys/class/gpio/export
  && ${sudo} modprobe -rv gpio_keys \
  || echo "log: will use /sys/class/gpio/"
 	${MAKE} run/${@F} run_args="${@D}"
+
+traffic-phat/%: ${main_src} /sys/class/gpio/export
+	-gpio -v || sudo apt-get install gpio || echo "TODO: install BCM tool"
+	list="13 19 26" ; \
+ for num in $${list} ; do \
+ sudo gpio export $num in \
+ sudo gpio -g mode $num up \
+ sudo gpio unexport $num \
+ done
+	${MAKE} run/${@F} run_args="${@D}"
