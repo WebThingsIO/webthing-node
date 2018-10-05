@@ -48,9 +48,9 @@ class AdcInProperty extends Property {
         return null;
       }
       self.inverval = setInterval(() => {
-        let value = self.port.readSync();
+        let value = Number(self.port.readSync());
         verbose(`log: ADC:\
- ${self.getName()}: update: 0x${Number(value).toString(0xF)}`);
+ ${self.getName()}: update: 0x${value.toString(0xF)}`);
         value = Number(Math.floor(100.0 * value / self.config.range));
         if (value !== self.lastValue) {
           log(`log: ADC: ${self.getName()}: change: ${value}%`);
@@ -69,7 +69,7 @@ class AdcInProperty extends Property {
       console.error(`error: ADC: ${this.getName()} close:${err}`);
       return err;
     }
-    log(`log: ADC: ${self.getName()}: close:`);
+    log(`log: ADC: ${this.getName()}: close:`);
   }
 }
 
