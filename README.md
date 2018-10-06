@@ -1,5 +1,6 @@
 # webthing
 
+[![github forks](https://img.shields.io/github/forks/mozilla-iot/webthing-node.svg?style=social&label=fork&maxage=2592000)](https://github.com/mozilla-iot/webthing-node/network/)
 [![Build Status](https://travis-ci.org/mozilla-iot/webthing-node.svg?branch=master)](https://travis-ci.org/mozilla-iot/webthing-node)
 [![NPM](https://img.shields.io/npm/v/webthing.svg)](https://www.npmjs.com/package/webthing)
 [![license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
@@ -142,3 +143,11 @@ setInterval(() => {
 ```
 
 This will update our `Value` object with the sensor readings via the `this.level.notifyOfExternalUpdate(readFromGPIO());` call. The `Value` object now notifies the property and the thing that the value has changed, which in turn notifies all websocket listeners.
+
+# Resources
+
+* https://iot.mozilla.org/things/
+* https://hacks.mozilla.org/2018/05/creating-web-things-with-python-node-js-and-java/
+* https://nodejs.org/en/
+* https://github.com/rzr/webthing-iotjs/wiki
+* https://youtu.be/Z-oiFl6gwGw
