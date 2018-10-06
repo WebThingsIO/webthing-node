@@ -32,6 +32,11 @@ setup/%:
 node_modules: package.json
 	npm install
 
+package-lock.json: package.json
+	rm -fv "$@"
+	npm install
+	ls "$@"
+
 setup/node: node_modules
 	@echo "NODE_PATH=$${NODE_PATH}"
 	node --version
