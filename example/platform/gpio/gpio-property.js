@@ -24,7 +24,7 @@ const gpio = require('gpio');
 
 class GpioOutProperty extends Property {
   constructor(thing, name, value, metadata, config) {
-    super(thing, name, new Value(value),
+    super(thing, name, new Value(Boolean(value)),
           {
             '@type': 'OnOffProperty',
             label: (metadata && metadata.label) || `On/Off: ${name}`,
