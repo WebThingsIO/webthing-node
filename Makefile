@@ -63,7 +63,7 @@ clean:
 	rm -rf ${tmp_dir}
 
 cleanall: clean
-	rm *~
+	rm -f *~
 
 distclean: cleanall
 	rm -rf node_modules
