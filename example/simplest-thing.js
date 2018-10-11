@@ -48,8 +48,7 @@ curl -X PUT -H 'Content-Type: application/json' --data '{"on": true }' ${url}
   const thing = makeThing();
   const server = new WebThingServer(new SingleThing(thing), port);
   process.on('SIGINT', () => {
-    server.stop();
-    process.exit();
+    server.stop().then(() => process.exit()).catch(() => process.exit());
   });
   server.start().catch(console.error);
 }
