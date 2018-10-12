@@ -80,8 +80,7 @@ Now we can add our newly created thing to the server and start it:
 const server = new WebThingServer(SingleThing(light), 8888);
 
 process.on('SIGINT', () => {
-  server.stop();
-  process.exit();
+  server.stop().then(() => process.exit()).catch(() => process.exit());
 });
 
 server.start().catch(console.error);
