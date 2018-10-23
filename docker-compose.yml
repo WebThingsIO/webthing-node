@@ -23,6 +23,7 @@ services:
     build: .
     command: start
     volumes:
-      - /usr/local/webthing-node/webthing-node
+      - /sys:/sys
     ports:
       - "8888:8888"
+    network_mode: "host"
