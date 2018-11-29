@@ -1,6 +1,6 @@
 {
   "name": "webthing",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "HTTP Web Thing implementation",
   "main": "webthing.js",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/mozilla-iot/webthing-node#readme",
   "dependencies": {
-    "ajv": "^6.5.5",
+    "ajv": "^6.6.1",
     "body-parser": "^1.18.3",
     "dnssd": "^0.4.1",
     "express": "^4.16.4",
