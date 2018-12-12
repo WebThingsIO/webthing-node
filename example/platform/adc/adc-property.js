@@ -28,7 +28,7 @@ class AdcInProperty extends Property {
     super(thing, name, new Value(Number(value)),
           {
             '@type': 'LevelProperty',
-            label: (metadata && metadata.label) || `Level: ${name}`,
+            title: (metadata && metadata.title) || `Level: ${name}`,
             type: 'number',
             readOnly: true,
             description:

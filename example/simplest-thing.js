@@ -27,7 +27,7 @@ function makeThing() {
                  new Value(true, (update) => console.log(`change: ${update}`)),
                  {
                    '@type': 'OnOffProperty',
-                   label: 'On/Off',
+                   title: 'On/Off',
                    type: 'boolean',
                    description: 'Whether the output is changed',
                  }));

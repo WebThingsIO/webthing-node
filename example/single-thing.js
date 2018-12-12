@@ -42,7 +42,7 @@ function makeThing() {
                  new Value(true),
                  {
                    '@type': 'OnOffProperty',
-                   label: 'On/Off',
+                   title: 'On/Off',
                    type: 'boolean',
                    description: 'Whether the lamp is turned on',
                  }));
@@ -52,7 +52,7 @@ function makeThing() {
                  new Value(50),
                  {
                    '@type': 'BrightnessProperty',
-                   label: 'Brightness',
+                   title: 'Brightness',
                    type: 'integer',
                    description: 'The level of light from 0-100',
                    minimum: 0,
@@ -63,7 +63,7 @@ function makeThing() {
   thing.addAvailableAction(
     'fade',
     {
-      label: 'Fade',
+      title: 'Fade',
       description: 'Fade the lamp to a given level',
       input: {
         type: 'object',
