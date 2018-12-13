@@ -47,7 +47,7 @@ light.addProperty(
     new Value(true, (v) => console.log('On-State is now', v)),
     {
       '@type': 'OnOffProperty',
-      label: 'On/Off',
+      title: 'On/Off',
       type: 'boolean',
       description: 'Whether the lamp is turned on',
     }));
@@ -63,7 +63,7 @@ light.addProperty(
     new Value(50, v => console.log('Brightness is now', v)),
     {
       '@type': 'BrightnessProperty',
-      label: 'Brightness',
+      title: 'Brightness',
       type: 'number',
       description: 'The level of light from 0-100',
       minimum: 0,
@@ -121,7 +121,7 @@ Then we create and add the appropriate property:
         level,
         {
           '@type': 'LevelProperty',
-          label: 'Humidity',
+          title: 'Humidity',
           type: 'number',
           description: 'The current humidity in %',
           minimum: 0,

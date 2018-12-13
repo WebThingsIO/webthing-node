@@ -27,7 +27,7 @@ class GpioOutProperty extends Property {
     super(thing, name, new Value(Boolean(value)),
           {
             '@type': 'OnOffProperty',
-            label: (metadata && metadata.label) || `On/Off: ${name}`,
+            title: (metadata && metadata.title) || `On/Off: ${name}`,
             type: 'boolean',
             description: (metadata && metadata.description) ||
               (`GPIO Actuator on pin=${config.pin}`),
@@ -68,7 +68,7 @@ class GpioInProperty extends Property {
     super(thing, name, new Value(Boolean(value)),
           {
             '@type': 'BooleanProperty',
-            label: (metadata && metadata.label) || `On/Off: ${name}`,
+            title: (metadata && metadata.title) || `On/Off: ${name}`,
             type: 'boolean',
             readOnly: true,
             description:

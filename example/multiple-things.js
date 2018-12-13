@@ -45,7 +45,7 @@ class ExampleDimmableLight extends Thing {
         new Value(true, (v) => console.log('On-State is now', v)),
         {
           '@type': 'OnOffProperty',
-          label: 'On/Off',
+          title: 'On/Off',
           type: 'boolean',
           description: 'Whether the lamp is turned on',
         }));
@@ -57,7 +57,7 @@ class ExampleDimmableLight extends Thing {
         new Value(50, (v) => console.log('Brightness is now', v)),
         {
           '@type': 'BrightnessProperty',
-          label: 'Brightness',
+          title: 'Brightness',
           type: 'integer',
           description: 'The level of light from 0-100',
           minimum: 0,
@@ -68,7 +68,7 @@ class ExampleDimmableLight extends Thing {
     this.addAvailableAction(
       'fade',
       {
-        label: 'Fade',
+        title: 'Fade',
         description: 'Fade the lamp to a given level',
         input: {
           type: 'object',
@@ -120,7 +120,7 @@ class FakeGpioHumiditySensor extends Thing {
         this.level,
         {
           '@type': 'LevelProperty',
-          label: 'Humidity',
+          title: 'Humidity',
           type: 'number',
           description: 'The current humidity in %',
           minimum: 0,
