@@ -1,5 +1,9 @@
 # webthing Changelog
 
+## [Unreleased]
+### Fixed
+- Properties could not include a custom `links` array at initialization.
+
 ## [0.10.0] - 2018-11-30
 ### Changed
 - Property, Action, and Event description now use `links` rather than `href`. - [Spec PR](https://github.com/mozilla-iot/wot/pull/119)
