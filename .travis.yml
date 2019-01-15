@@ -9,6 +9,7 @@ node_js:
     - "8"
     - "9"
     - "10"
+    - "11"
 before_script:
     - wget https://bootstrap.pypa.io/get-pip.py
     - sudo python3 get-pip.py
