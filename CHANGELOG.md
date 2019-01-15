@@ -1,6 +1,8 @@
 # webthing Changelog
 
 ## [Unreleased]
+### Changed
+- WebThingServer constructor can now take a list of additional API routes.
 ### Fixed
 - Properties could not include a custom `links` array at initialization.
 
