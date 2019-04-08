@@ -107,11 +107,6 @@ Then we create and add the appropriate property:
     * Contrary to the light, the value cannot be set via an API call, as it wouldn't make much sense, to SET what a sensor is reading. Therefore, we are creating a *readOnly* property.
 
     ```javascript
-    Map<String, Object> levelDescription = new HashMap<>();
-    levelDescription.put('type', 'number');
-    levelDescription.put('description', 'The current humidity in %');
-    levelDescription.put('unit', '%');
-
     const level = new Value(0.0);
 
     sensor.addProperty(
