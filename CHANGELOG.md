@@ -1,5 +1,9 @@
 # webthing Changelog
 
+## [Unreleased]
+### Added
+- Ability to set a base URL path on server.
+
 ## [0.11.0] - 2019-01-16
 ### Changed
 - WebThingServer constructor can now take a list of additional API routes.
