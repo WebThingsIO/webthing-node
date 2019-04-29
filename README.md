@@ -21,7 +21,7 @@ In this example we will set up a dimmable light and a humidity sensor (both usin
 
 ## Dimmable Light
 
-Imagine you have a dimmable light that you want to expose via the web of things API. The light can be turned on/off and the brightness can be set from 0% to 100%. Besides the name, description, and type, a `Light` is required to expose two properties:
+Imagine you have a dimmable light that you want to expose via the web of things API. The light can be turned on/off and the brightness can be set from 0% to 100%. Besides the name, description, and type, a [`Light`](https://iot.mozilla.org/schemas/#Light) is required to expose two properties:
 * `on`: the state of the light, whether it is turned on or off
     * Setting this property via a `PUT {"on": true/false}` call to the REST API toggles the light.
 * `brightness`: the brightness level of the light from 0-100%
@@ -92,7 +92,7 @@ This will start the server, making the light available via the WoT REST API and 
 
 Let's now also connect a humidity sensor to the server we set up for our light.
 
-A `MultiLevelSensor` (a sensor that returns a level instead of just on/off) has one required property (besides the name, type, and optional description): **`level`**. We want to monitor this property and get notified if the value changes.
+A [`MultiLevelSensor`](https://iot.mozilla.org/schemas/#MultiLevelSensor) (a sensor that returns a level instead of just on/off) has one required property (besides the name, type, and optional description): **`level`**. We want to monitor this property and get notified if the value changes.
 
 First we create a new Thing:
 
