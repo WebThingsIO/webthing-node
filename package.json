@@ -1,6 +1,6 @@
 {
   "name": "webthing",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "HTTP Web Thing implementation",
   "main": "webthing.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "express-ws": "^4.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "eslint": "^5.16.0",
     "uuid": "^3.3.2"
   }
