@@ -36,7 +36,12 @@ class FadeAction extends Action {
  */
 class ExampleDimmableLight extends Thing {
   constructor() {
-    super('My Lamp', ['OnOffSwitch', 'Light'], 'A web connected lamp');
+    super(
+      'urn:dev:ops:my-lamp-1234',
+      'My Lamp',
+      ['OnOffSwitch', 'Light'],
+      'A web connected lamp'
+    );
 
     this.addProperty(
       new Property(
@@ -108,9 +113,12 @@ class ExampleDimmableLight extends Thing {
  */
 class FakeGpioHumiditySensor extends Thing {
   constructor() {
-    super('My Humidity Sensor',
-          ['MultiLevelSensor'],
-          'A web connected humidity sensor');
+    super(
+      'urn:dev:ops:my-humidity-sensor-1234',
+      'My Humidity Sensor',
+      ['MultiLevelSensor'],
+      'A web connected humidity sensor'
+    );
 
     this.level = new Value(0.0);
     this.addProperty(

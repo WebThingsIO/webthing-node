@@ -32,7 +32,8 @@ class FadeAction extends Action {
 }
 
 function makeThing() {
-  const thing = new Thing('My Lamp',
+  const thing = new Thing('urn:dev:ops:my-lamp-1234',
+                          'My Lamp',
                           ['OnOffSwitch', 'Light'],
                           'A web connected lamp');
 

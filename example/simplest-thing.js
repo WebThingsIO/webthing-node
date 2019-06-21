@@ -17,7 +17,8 @@ const {
 } = require('webthing');
 
 function makeThing() {
-  const thing = new Thing('ActuatorExample',
+  const thing = new Thing('urn:dev:ops:my-actuator-1234',
+                          'ActuatorExample',
                           ['OnOffSwitch'],
                           'An actuator example that just log');
 

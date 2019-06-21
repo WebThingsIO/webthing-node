@@ -30,7 +30,8 @@ Imagine you have a dimmable light that you want to expose via the web of things 
 First we create a new Thing:
 
 ```javascript
-const light = new Thing('My Lamp',
+const light = new Thing('urn:dev:ops:my-lamp-1234',
+                        'My Lamp',
                         ['OnOffSwitch', 'Light'],
                         'A web connected lamp');
 ```
@@ -97,7 +98,8 @@ A [`MultiLevelSensor`](https://iot.mozilla.org/schemas/#MultiLevelSensor) (a sen
 First we create a new Thing:
 
 ```javascript
-const sensor = new Thing('My Humidity Sensor',
+const sensor = new Thing('urn:dev:ops:my-humidity-sensor-1234',
+                         'My Humidity Sensor',
                          ['MultiLevelSensor'],
                          'A web connected humidity sensor');
 ```
