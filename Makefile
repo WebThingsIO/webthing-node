@@ -123,3 +123,10 @@ ${eslint}:
 
 .eslintrc.js: ${eslint}
 	ls $@ || $< --init
+
+lint/%: eslint
+	sync
+
+lint: lint/${runtime}
+	sync
+
