@@ -19,7 +19,8 @@ const GpioProperty = require('../gpio/gpio-property');
 
 class ARTIK530Thing extends Thing {
   constructor(name, type, description) {
-    super(name || 'ARTIK530',
+    super('urn:dev:ops:my-artik530-1234',
+          name || 'ARTIK530',
           type || [],
           description || 'A web connected ARTIK530 or ARTIK720');
     const self = this;
