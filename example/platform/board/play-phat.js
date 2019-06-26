@@ -18,7 +18,8 @@ const GpioProperty = require('../gpio/gpio-property');
 
 class PlayPHatThing extends Thing {
   constructor(name, type, description) {
-    super(name || 'PlayPHat',
+    super('urn:dev:ops:my-play-phat-1234',
+          name || 'PlayPHat',
           type || [],
           description || 'A web connected Play RaspberryPi Hat');
     const self = this;

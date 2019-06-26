@@ -18,7 +18,8 @@ const GpioProperty = require('../gpio/gpio-property');
 
 class FlexPHatThing extends Thing {
   constructor(name, type, description) {
-    super(name || 'FlexPHat',
+    super('urn:dev:ops:my-flex-phat-1234',
+          name || 'FlexPHat',
           type || [],
           description || 'A web connected Flex RaspberryPi Hat');
     const self = this;
