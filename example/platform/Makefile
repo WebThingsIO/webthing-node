@@ -126,7 +126,7 @@ flex-phat/%: ${main_src} gpio
 	${gpio} -g mode ${rpi_gpio} up
 	${MAKE} run/${@F} run_args="${@D}"
 
-play-phat/%: ${main_src}  /sys/class/gpio/export 
+play-phat/%: ${main_src} /sys/class/gpio/export
 	-lsmod | grep gpio_keys \
  && ${sudo} modprobe -rv gpio_keys \
  || echo "log: will use /sys/class/gpio/"
