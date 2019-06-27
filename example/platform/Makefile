@@ -19,6 +19,7 @@ topdir ?= ${CURDIR}/${topreldir}
 run_args ?=
 npm_args ?= start
 sudo ?= sudo
+gpio ?= gpio
 tmp_dir ?= tmp
 
 export PATH
@@ -117,9 +118,12 @@ edison/%: /sys/class/gpio/gpio${edison_gpio} ${main_src}
 	echo mode1 | ${sudo} tee /sys/kernel/debug/gpio_debug/gpio${edison_gpio}/current_pinmux
 	${MAKE} sudo/run/${@F} run_args="${@D}"
 
-flex-phat/%: ${main_src} /sys/class/gpio/export
-	-gpio -v || ${sudo} apt-get install gpio
-	gpio -g mode ${rpi_gpio} up
+gpio: /sys/class/gpio/export 
+	-${gpio} -v || ${sudo} apt-get install gpio || echo "TODO: install BCM tool"
+	-${gpio} -v
+
+flex-phat/%: ${main_src} gpio
+	${gpio} -g mode ${rpi_gpio} up
 	${MAKE} run/${@F} run_args="${@D}"
 
 play-phat/%: ${main_src} /sys/class/gpio/export
@@ -128,11 +132,10 @@ play-phat/%: ${main_src} /sys/class/gpio/export
  || echo "log: will use /sys/class/gpio/"
 	${MAKE} run/${@F} run_args="${@D}"
 
-traffic-phat/%: ${main_src} /sys/class/gpio/export
-	-gpio -v || ${sudo} apt-get install gpio || echo "TODO: install BCM tool"
- for num in ${rpi_gpio_list} ; do \
- ${sudo} gpio export $num in \
- ${sudo} gpio -g mode $num up \
- ${sudo} gpio unexport $num \
+traffic-phat/%: ${main_src} gpio
+	 for num in ${rpi_gpio_list} ; do \
+ ${sudo} ${gpio} export $${num} in ; \
+ ${sudo} ${gpio} -g mode $${num} up ; \
+ ${sudo} ${gpio} unexport $${num} ; \
  done
 	${MAKE} run/${@F} run_args="${@D}"
