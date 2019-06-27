@@ -9,7 +9,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.*
 #}
 
-default: all
+default: help all
 
 main_src ?= index.js
 lib_srcs ?= $(wildcard */*.js | sort)
@@ -20,8 +20,23 @@ run_args ?=
 npm_args ?= start
 sudo ?= sudo
 tmp_dir ?= tmp
+
+export PATH
 NODE_PATH := ${topreldir}:${NODE_PATH}
 export NODE_PATH
+
+rpi_gpio ?= 11
+rpi_gpio_list ?= 13 19 26
+edison_gpio ?= 12
+
+
+help:
+	@echo "Usage:"
+	@echo '# make ${board}'
+	@echo '# make edison'
+	@echo '# make flex-phat'
+	@echo '# make play-phat'
+	@echo '# make traffic-phat'
 
 
 %: %/${runtime}
@@ -38,22 +53,35 @@ run/%: /sys/class/gpio/export ${main_src} setup
 	-which ${@F}
 	${@F} ${main_src} ${run_args}
 
+sudo/run/%: /sys/class/gpio/export ${main_src} setup
+	ls -l $<
+	-which ${@F}
+	${sudo} env "PATH=${PATH}" ${@F} ${main_src} ${run_args}
+
 run/npm: /sys/class/gpio/export package.json setup
 	ls -l $<
 	npm run ${npm_args} ${run_args}
 
 run: run/${runtime}
+	sync
+
+start: run
+	sync
 
 force:
 
-/sys/class/gpio/export: force
-	${sudo} cat /sys/kernel/debug/gpio
+/sys/kernel/debug/gpio:
+	${sudo} ls -l $@
+
+/sys/class/gpio/export: /sys/kernel/debug/gpio force
+	${sudo} cat $<
 
 node_modules: package.json
 	-which npm
 	npm --version
 	npm install
 	@mkdir -p "$@"
+	ln -fs ../../.. ${@}/webthing
 
 package.json:
 	npm init
@@ -75,13 +103,23 @@ check/%: ${lib_srcs}
 
 check: check/${runtime}
 
-
 board/%: ${main_src} board/%.js /sys/class/gpio/export setup
 	${runtime} $< ${@F}
 
+/sys/class/gpio/gpio${edison_gpio}: /sys/class/gpio/export
+	echo ${edison_gpio} | ${sudo} tee $<
+	ls -l $@
+
+edison/%: /sys/class/gpio/gpio${edison_gpio} ${main_src}
+	echo out | ${sudo} tee ${<}/direction
+	echo 0 | ${sudo} tee ${<}/value
+	${sudo} cat /sys/kernel/debug/gpio_debug/gpio${edison_gpio}/current_pinmux # mode0
+	echo mode1 | ${sudo} tee /sys/kernel/debug/gpio_debug/gpio${edison_gpio}/current_pinmux
+	${MAKE} sudo/run/${@F} run_args="${@D}"
+
 flex-phat/%: ${main_src} /sys/class/gpio/export
-	-gpio -v || sudo apt-get install gpio
-	gpio -g mode 11 up
+	-gpio -v || ${sudo} apt-get install gpio
+	gpio -g mode ${rpi_gpio} up
 	${MAKE} run/${@F} run_args="${@D}"
 
 play-phat/%: ${main_src} /sys/class/gpio/export
@@ -91,11 +129,10 @@ play-phat/%: ${main_src} /sys/class/gpio/export
 	${MAKE} run/${@F} run_args="${@D}"
 
 traffic-phat/%: ${main_src} /sys/class/gpio/export
-	-gpio -v || sudo apt-get install gpio || echo "TODO: install BCM tool"
-	list="13 19 26" ; \
- for num in $${list} ; do \
- sudo gpio export $num in \
- sudo gpio -g mode $num up \
- sudo gpio unexport $num \
+	-gpio -v || ${sudo} apt-get install gpio || echo "TODO: install BCM tool"
+ for num in ${rpi_gpio_list} ; do \
+ ${sudo} gpio export $num in \
+ ${sudo} gpio -g mode $num up \
+ ${sudo} gpio unexport $num \
  done
 	${MAKE} run/${@F} run_args="${@D}"
