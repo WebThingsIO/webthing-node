@@ -9,20 +9,23 @@
 
 const fs = require('fs');
 
-function Adc() {
-  this.open = function(config, callback) {
+class Adc {
+  constructor(config, callback) {
     this.config = config;
     fs.access(config.device, fs.R_OK, callback);
-    return this;
-  };
+  }
 
-  this.readSync = function() {
+  readSync() {
     const contents = fs.readFileSync(this.config.device, 'ascii');
     return contents;
-  };
+  }
 
-  this.closeSync = function() {
-  };
+  closeSync() {
+  }
+
 }
 
-module.exports = new Adc();
+
+module.exports.open = function(config, callback) {
+  return new Adc(config, callback);
+};
