@@ -15,6 +15,7 @@ const {
 } = require('webthing');
 
 const AdcProperty = require('../adc/adc-property');
+const PwmProperty = require('../pwm/pwm-property');
 
 
 class ARTIK1020Thing extends Thing {
@@ -26,35 +27,41 @@ class ARTIK1020Thing extends Thing {
     const self = this;
     this.pinProperties = [
       new AdcProperty(this, 'ADC0', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A0 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage0_raw'}),
       new AdcProperty(this, 'ADC1', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A1 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage1_raw'}),
       new AdcProperty(this, 'ADC2', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A2 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage2_raw'}),
       new AdcProperty(this, 'ADC3', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A3 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage5_raw'}),
       new AdcProperty(this, 'ADC4', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A4 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage6_raw'}),
       new AdcProperty(this, 'ADC5', 0,
-                      {description: 'Analog port of ARTIK1020'},
+                      {description: 'A5 on J24 of board'},
                       {direction: 'in',
                        device: '/sys/devices/12d10000.adc/iio:device0\
 /in_voltage7_raw'}),
+      new PwmProperty(this, 'PWM0', 50,
+                      {description: 'XPWMO1 on J26[6] of board (pwm0)'}),
+
+      new PwmProperty(this, 'PWM1', 50,
+                      {description: 'XPWMO0 on J26[5] of board (pwm1)'},
+                      {pwm: {pin: 1}}),
     ];
     this.pinProperties.forEach((property) => {
       self.addProperty(property);
