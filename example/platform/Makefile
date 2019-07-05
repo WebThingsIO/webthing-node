@@ -30,15 +30,15 @@ rpi_gpio ?= 11
 rpi_gpio_list ?= 13 19 26
 edison_gpio ?= 12
 
-
 help:
 	@echo "Usage:"
-	@echo '# make ${board}'
+	@echo '# make start'
+	@echo '# make $${board}'
+	@echo '# make artik1020'
 	@echo '# make edison'
 	@echo '# make flex-phat'
 	@echo '# make play-phat'
 	@echo '# make traffic-phat'
-
 
 %: %/${runtime}
 	echo "# $@: $^"
@@ -110,6 +110,9 @@ board/%: ${main_src} board/%.js /sys/class/gpio/export setup
 /sys/class/gpio/gpio${edison_gpio}: /sys/class/gpio/export
 	echo ${edison_gpio} | ${sudo} tee $<
 	ls -l $@
+
+artik1020/%: ${main_src}
+	${MAKE} sudo/run/${@F} run_args="${@D}"
 
 edison/%: /sys/class/gpio/gpio${edison_gpio} ${main_src}
 	echo out | ${sudo} tee ${<}/direction
