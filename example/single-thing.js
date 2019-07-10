@@ -23,7 +23,7 @@ class FadeAction extends Action {
   performAction() {
     return new Promise((resolve) => {
       setTimeout(() => {
-        this.thing.setProperty('brightness', this.input.brightness);
+        this.thing.setProperty('level', this.input.level);
         this.thing.addEvent(new OverheatedEvent(this.thing, 102));
         resolve();
       }, this.input.duration);
@@ -49,7 +49,7 @@ function makeThing() {
                  }));
   thing.addProperty(
     new Property(thing,
-                 'brightness',
+                 'level',
                  new Value(50),
                  {
                    '@type': 'BrightnessProperty',
@@ -69,11 +69,11 @@ function makeThing() {
       input: {
         type: 'object',
         required: [
-          'brightness',
+          'level',
           'duration',
         ],
         properties: {
-          brightness: {
+          level: {
             type: 'integer',
             minimum: 0,
             maximum: 100,
