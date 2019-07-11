@@ -115,6 +115,7 @@ module.exports = {
       }
     ],
     'no-multiple-empty-lines': 'error',
+    'no-prototype-builtins': 'off',
     'no-return-assign': 'error',
     'no-script-url': 'error',
     'no-self-compare': 'error',
