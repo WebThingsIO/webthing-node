@@ -51,5 +51,6 @@ Try:\ncurl -H "Accept: application/json" ${url}\
   log(`log: board: ${board}: Started`);
 }
 
-runServer();
-
+if (module.parent === null) {
+  runServer();
+}
