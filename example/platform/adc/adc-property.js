@@ -43,7 +43,7 @@ class AdcInProperty extends Property {
     this.port = adc.open(config, (err) => {
       log(`log: ADC: ${self.getName()}: open: ${err} (null expected)`);
       if (err) {
-        console.error(`errror: ADC: ${self.getName()}: Fail to open:\
+        console.error(`error: ADC: ${self.getName()}: Fail to open:\
  ${config.pin}`);
         return null;
       }
