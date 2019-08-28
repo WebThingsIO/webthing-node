@@ -9,7 +9,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/ .
 #}
 
-FROM node:8-stretch
+FROM node:10-buster
 LABEL maintainer="Philippe Coval (p.coval@samsung.com)"
 
 ENV DEBIAN_FRONTEND noninteractive
