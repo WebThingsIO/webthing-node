@@ -1,6 +1,5 @@
 # webthing
 
-[![github forks](https://img.shields.io/github/forks/mozilla-iot/webthing-node.svg?style=social&label=fork&maxage=2592000)](https://github.com/mozilla-iot/webthing-node/network/)
 [![Build Status](https://github.com/mozilla-iot/webthing-node/workflows/Node.js%20package/badge.svg)](https://github.com/mozilla-iot/webthing-node/workflows/Node.js%20package)
 [![NPM](https://img.shields.io/npm/v/webthing.svg)](https://www.npmjs.com/package/webthing)
 [![license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
