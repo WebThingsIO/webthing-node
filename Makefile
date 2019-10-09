@@ -9,7 +9,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.*
 #}
 
-default: all
+default: help all
 
 tmp_dir ?= tmp
 runtime ?= node
@@ -24,6 +24,14 @@ NODE_PATH := .:${NODE_PATH}
 export NODE_PATH
 
 
+port?=8888
+url?=http://localhost:${port}
+
+help:
+	@echo "## Usage: "
+	@echo "# make start # To start default application"
+	@echo "# make test # To test default application"
+
 all: build
 
 setup/%:
@@ -31,6 +39,9 @@ setup/%:
 
 node_modules: package.json
 	npm install
+
+modules: ${runtime}_modules
+	ls $<
 
 package-lock.json: package.json
 	rm -fv "$@"
@@ -68,7 +79,7 @@ cleanall: clean
 distclean: cleanall
 	rm -rf node_modules
 
-${tmp_dir}/rule/test/pid/%: ${main_src} build
+${tmp_dir}/rule/test/pid/%: ${main_src} build modules
 	@mkdir -p "${@D}"
 	${@F} $< & echo $$! > "$@"
 	sleep ${run_timeout}
@@ -76,8 +87,12 @@ ${tmp_dir}/rule/test/pid/%: ${main_src} build
 
 test/%: ${tmp_dir}/rule/test/pid/%
 	cat $<
-	curl http://localhost:8888 \
- || curl -I http://localhost:8888 \
+	curl ${url} || curl -I ${url}
+	@echo ""
+	curl --fail ${url}/0/properties
+	@echo ""
+	curl --fail ${url}/1/properties
+	@echo ""
 	kill $$(cat $<) ||:
 	kill -9 $$(cat $<) ||:
 
