@@ -7,3 +7,9 @@
 npm-debug.log
 tmp/
 .#*
+lib/*.js
+lib/*.d.ts
+webthing.js
+webthing.d.ts
+index.js
+index.d.ts

@@ -4,15 +4,15 @@
 
 'use strict';
 
-const os = require('os');
+import os from 'os';
 
-module.exports = {
+export = {
   /**
    * Get the current time.
    *
    * @returns {String} The current time in the form YYYY-mm-ddTHH:MM:SS+00:00
    */
-  timestamp: function() {
+  timestamp: function(): string {
     const date = new Date().toISOString();
     return date.replace(/\.\d{3}Z/, '+00:00');
   },
@@ -22,8 +22,8 @@ module.exports = {
    *
    * @returns {string[]} Array of addresses.
    */
-  getAddresses: function() {
-    const addresses = new Set();
+  getAddresses: function(): string[] {
+    const addresses = new Set<string>();
 
     const ifaces = os.networkInterfaces();
     Object.keys(ifaces).forEach((iface) => {

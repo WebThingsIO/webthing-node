@@ -1,3 +1,10 @@
 **/node_modules/
 /.eslintrc.js
 tmp/
+lib/*.js
+lib/*.d.ts
+index.js
+index.d.ts
+webthing.js
+webthing.d.ts
+*.eslintrc.js

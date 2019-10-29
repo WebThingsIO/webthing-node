@@ -4,13 +4,43 @@
 
 'use strict';
 
-const Ajv = require('ajv');
+import Ajv from 'ajv';
+import Property = require('./property');
+import Event from './event';
+import Action from './action';
+import {Link, Subscriber} from './types';
 const ajv = new Ajv();
 
 /**
  * A Web Thing.
  */
 class Thing {
+  private id: string
+
+  private title: string
+
+  private type: string[]
+
+  private context: string
+
+  private description: string
+
+  private properties: {[name: string]: Property};
+
+  private availableActions: any
+
+  private availableEvents: any
+
+  private actions: {[name: string]: Action[]}
+
+  private events: Event[]
+
+  private subscribers = new Set<Subscriber>();
+
+  private hrefPrefix: string
+
+  private uiHref: string|null
+
   /**
    * Initialize the object.
    *
@@ -19,7 +49,10 @@ class Thing {
    * @param {String} type (Optional) The thing's type(s)
    * @param {String} description (Optional) Description of the thing
    */
-  constructor(id, title, type, description) {
+  constructor(id: string,
+              title: string,
+              type: string|string[],
+              description: string) {
     if (!Array.isArray(type)) {
       type = [type];
     }
@@ -44,8 +77,8 @@ class Thing {
    *
    * @returns {Object} Current thing state
    */
-  asThingDescription() {
-    const thing = {
+  asThingDescription(): Thing.ThingDescription {
+    const thing: any = {
       id: this.id,
       title: this.title,
       '@context': this.context,
@@ -101,7 +134,7 @@ class Thing {
       thing.description = this.description;
     }
 
-    return thing;
+    return thing as Thing.ThingDescription;
   }
 
   /**
@@ -109,7 +142,7 @@ class Thing {
    *
    * @returns {String} The href.
    */
-  getHref() {
+  getHref(): string {
     if (this.hrefPrefix) {
       return this.hrefPrefix;
     }
@@ -122,7 +155,7 @@ class Thing {
    *
    * @returns {String|null} The href.
    */
-  getUiHref() {
+  getUiHref(): string | null {
     return this.uiHref;
   }
 
@@ -131,7 +164,7 @@ class Thing {
    *
    * @param {String} prefix The prefix
    */
-  setHrefPrefix(prefix) {
+  setHrefPrefix(prefix: string): void {
     this.hrefPrefix = prefix;
 
     for (const property of Object.values(this.properties)) {
@@ -150,7 +183,7 @@ class Thing {
    *
    * @param {String} href The href
    */
-  setUiHref(href) {
+  setUiHref(href: string): void {
     this.uiHref = href;
   }
 
@@ -159,7 +192,7 @@ class Thing {
    *
    * @returns {String} The ID.
    */
-  getId() {
+  getId(): string {
     return this.id;
   }
 
@@ -168,7 +201,7 @@ class Thing {
    *
    * @returns {String} The title.
    */
-  getTitle() {
+  getTitle(): string {
     return this.title;
   }
 
@@ -177,7 +210,7 @@ class Thing {
    *
    * @returns {String} The context.
    */
-  getContext() {
+  getContext(): string {
     return this.context;
   }
 
@@ -186,7 +219,7 @@ class Thing {
    *
    * @returns {String[]} The type(s).
    */
-  getType() {
+  getType(): string[] {
     return this.type;
   }
 
@@ -195,7 +228,7 @@ class Thing {
    *
    * @returns {String} The description.
    */
-  getDescription() {
+  getDescription(): string {
     return this.description;
   }
 
@@ -204,8 +237,8 @@ class Thing {
    *
    * @returns {Object} Properties, i.e. name -> description
    */
-  getPropertyDescriptions() {
-    const descriptions = {};
+  getPropertyDescriptions(): {[name: string]: Property.PropertyDescription} {
+    const descriptions: {[name: string]: Property.PropertyDescription} = {};
     for (const name in this.properties) {
       descriptions[name] = this.properties[name].asPropertyDescription();
     }
@@ -220,7 +253,7 @@ class Thing {
    *
    * @returns {Object} Action descriptions.
    */
-  getActionDescriptions(actionName) {
+  getActionDescriptions(actionName?: string | null): object {
     const descriptions = [];
 
     if (!actionName) {
@@ -245,7 +278,7 @@ class Thing {
    *
    * @returns {Object} Event descriptions.
    */
-  getEventDescriptions(eventName) {
+  getEventDescriptions(eventName?: string | null): Event.EventDescription[] {
     if (!eventName) {
       return this.events.map((e) => e.asEventDescription());
     } else {
@@ -260,9 +293,9 @@ class Thing {
    *
    * @param {Object} property Property to add
    */
-  addProperty(property) {
+  addProperty(property: Property): void {
     property.setHrefPrefix(this.hrefPrefix);
-    this.properties[property.name] = property;
+    this.properties[property.getName()] = property;
   }
 
   /**
@@ -270,9 +303,9 @@ class Thing {
    *
    * @param {Object} property Property to remove
    */
-  removeProperty(property) {
-    if (this.properties.hasOwnProperty(property.name)) {
-      delete this.properties[property.name];
+  removeProperty(property: Property): void {
+    if (this.properties.hasOwnProperty(property.getName())) {
+      delete this.properties[property.getName()];
     }
   }
 
@@ -283,7 +316,7 @@ class Thing {
    *
    * @returns {(Object|null)} Property if found, else null
    */
-  findProperty(propertyName) {
+  findProperty(propertyName: string): (Property | null) {
     if (this.properties.hasOwnProperty(propertyName)) {
       return this.properties[propertyName];
     }
@@ -298,7 +331,7 @@ class Thing {
    *
    * @returns {*} Current property value if found, else null
    */
-  getProperty(propertyName) {
+  getProperty(propertyName: string): any|null {
     const prop = this.findProperty(propertyName);
     if (prop) {
       return prop.getValue();
@@ -312,8 +345,8 @@ class Thing {
    *
    * Returns an object of propertyName -> value.
    */
-  getProperties() {
-    const props = {};
+  getProperties(): { [propertyName: string]: any } {
+    const props: { [propertyName: string]: any } = {};
     for (const name in this.properties) {
       props[name] = this.properties[name].getValue();
     }
@@ -328,7 +361,7 @@ class Thing {
    *
    * @returns {Boolean} Indication of property presence
    */
-  hasProperty(propertyName) {
+  hasProperty(propertyName: string): boolean {
     return this.properties.hasOwnProperty(propertyName);
   }
 
@@ -338,7 +371,7 @@ class Thing {
    * @param {String} propertyName Name of the property to set
    * @param {*} value Value to set
    */
-  setProperty(propertyName, value) {
+  setProperty(propertyName: string, value: any): void {
     const prop = this.findProperty(propertyName);
     if (!prop) {
       return;
@@ -354,13 +387,13 @@ class Thing {
    * @param {String} actionId ID of the action
    * @returns {Object} The requested action if found, else null
    */
-  getAction(actionName, actionId) {
+  getAction(actionName: string, actionId: string): Action|null {
     if (!this.actions.hasOwnProperty(actionName)) {
       return null;
     }
 
     for (const action of this.actions[actionName]) {
-      if (action.id === actionId) {
+      if (action.getId() === actionId) {
         return action;
       }
     }
@@ -374,7 +407,7 @@ class Thing {
    *
    * @param {Object} event The event that occurred
    */
-  addEvent(event) {
+  addEvent(event: Event): void {
     this.events.push(event);
     this.eventNotify(event);
   }
@@ -386,7 +419,7 @@ class Thing {
    * @param {Object} metadata Event metadata, i.e. type, description, etc., as
    *                          an object.
    */
-  addAvailableEvent(name, metadata) {
+  addAvailableEvent(name: string, metadata: Event.EventMetadata): void {
     if (!metadata) {
       metadata = {};
     }
@@ -404,7 +437,7 @@ class Thing {
    * @param {Object} input Any action inputs
    * @returns {Object} The action that was created.
    */
-  performAction(actionName, input) {
+  performAction(actionName: string, input: object): Action|undefined {
     input = input || null;
 
     if (!this.availableActions.hasOwnProperty(actionName)) {
@@ -420,7 +453,7 @@ class Thing {
       }
     }
 
-    const action = new actionType.class(this, input);
+    const action: Action = new actionType.class(this, input);
     action.setHrefPrefix(this.hrefPrefix);
     this.actionNotify(action);
     this.actions[actionName].push(action);
@@ -434,7 +467,7 @@ class Thing {
    * @param {String} actionId ID of the action
    * @returns boolean indicating the presence of the action.
    */
-  removeAction(actionName, actionId) {
+  removeAction(actionName: string, actionId: string): boolean {
     const action = this.getAction(actionName, actionId);
     if (action === null) {
       return false;
@@ -442,7 +475,7 @@ class Thing {
 
     action.cancel();
     for (let i = 0; i < this.actions[actionName].length; ++i) {
-      if (this.actions[actionName][i].id === actionId) {
+      if (this.actions[actionName][i].getId() === actionId) {
         this.actions[actionName].splice(i, 1);
         break;
       }
@@ -459,7 +492,9 @@ class Thing {
    *                          an object.
    * @param {Object} cls Class to instantiate for this action
    */
-  addAvailableAction(name, metadata, cls) {
+  addAvailableAction(name: string,
+                     metadata: Action.ActionMetadata|null,
+                     cls: InstanceType<Action.ActionTypeClass>): void {
     if (!metadata) {
       metadata = {};
     }
@@ -476,16 +511,15 @@ class Thing {
    *
    * @param {Object} ws The websocket
    */
-  addSubscriber(ws) {
+  addSubscriber(ws: Subscriber): void {
     this.subscribers.add(ws);
   }
 
   /**
    * Remove a websocket subscriber.
    *
-   * @param {Object} ws The websocket
    */
-  removeSubscriber(ws) {
+  removeSubscriber(ws: Subscriber): void {
     if (this.subscribers.has(ws)) {
       this.subscribers.delete(ws);
     }
@@ -499,9 +533,9 @@ class Thing {
    * Add a new websocket subscriber to an event.
    *
    * @param {String} name Name of the event
-   * @param {Object} ws The websocket
+   * @param {Subscriber} ws The websocket
    */
-  addEventSubscriber(name, ws) {
+  addEventSubscriber(name: string, ws: Subscriber): void {
     if (this.availableEvents.hasOwnProperty(name)) {
       this.availableEvents[name].subscribers.add(ws);
     }
@@ -513,7 +547,7 @@ class Thing {
    * @param {String} name Name of the event
    * @param {Object} ws The websocket
    */
-  removeEventSubscriber(name, ws) {
+  removeEventSubscriber(name: string, ws: Subscriber): void {
     if (this.availableEvents.hasOwnProperty(name) &&
         this.availableEvents[name].subscribers.has(ws)) {
       this.availableEvents[name].subscribers.delete(ws);
@@ -525,11 +559,11 @@ class Thing {
    *
    * @param {Object} property The property that changed
    */
-  propertyNotify(property) {
+  propertyNotify(property: Property): void {
     const message = JSON.stringify({
       messageType: 'propertyStatus',
       data: {
-        [property.name]: property.getValue(),
+        [property.getName()]: property.getValue(),
       },
     });
 
@@ -547,7 +581,7 @@ class Thing {
    *
    * @param {Object} action The action whose status changed
    */
-  actionNotify(action) {
+  actionNotify(action: Action): void {
     const message = JSON.stringify({
       messageType: 'actionStatus',
       data: action.asActionDescription(),
@@ -567,8 +601,8 @@ class Thing {
    *
    * @param {Object} event The event that occurred
    */
-  eventNotify(event) {
-    if (!this.availableEvents.hasOwnProperty(event.name)) {
+  eventNotify(event: Event): void {
+    if (!this.availableEvents.hasOwnProperty(event.getName())) {
       return;
     }
 
@@ -577,7 +611,8 @@ class Thing {
       data: event.asEventDescription(),
     });
 
-    for (const subscriber of this.availableEvents[event.name].subscribers) {
+    for (const subscriber of
+      this.availableEvents[event.getName()].subscribers) {
       try {
         subscriber.send(message);
       } catch (e) {
@@ -587,4 +622,21 @@ class Thing {
   }
 }
 
-module.exports = Thing;
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Thing {
+  export interface ThingDescription {
+    id: string;
+    title: string;
+    name: string;
+    href: string;
+    '@context': string;
+    '@type': string[];
+    properties: { [name: string]: Property.PropertyDescription };
+    links: Link[];
+    actions: Action.ActionMetadata;
+    events: Event.EventMetadata;
+    description?: string;
+  }
+}
+
+export = Thing;

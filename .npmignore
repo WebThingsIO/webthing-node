@@ -1,2 +1,4 @@
 .eslintrc.js
 test-server.js
+*.ts
+!*.d.ts

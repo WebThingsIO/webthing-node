@@ -4,7 +4,7 @@
 
 'use strict';
 
-const EventEmitter = require('events');
+import EventEmitter from 'events';
 
 /**
  * A property value.
@@ -17,6 +17,11 @@ const EventEmitter = require('events');
  * new value.
  */
 class Value extends EventEmitter {
+
+  private lastValue: any
+
+  private valueForwarder: ((value: any) => void) |null
+
   /**
    * Initialize the object.
    *
@@ -24,7 +29,8 @@ class Value extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue, valueForwarder = null) {
+  constructor(initialValue: any,
+              valueForwarder: ((value: any) => void)|null = null) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
@@ -35,7 +41,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value Value to set
    */
-  set(value) {
+  set(value: any): void {
     if (this.valueForwarder) {
       this.valueForwarder(value);
     }
@@ -48,7 +54,7 @@ class Value extends EventEmitter {
    *
    * @returns the value.
    */
-  get() {
+  get(): any {
     return this.lastValue;
   }
 
@@ -57,7 +63,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value New value
    */
-  notifyOfExternalUpdate(value) {
+  notifyOfExternalUpdate(value: any): void {
     if (typeof value !== 'undefined' &&
         value !== null &&
         value !== this.lastValue) {
@@ -67,4 +73,4 @@ class Value extends EventEmitter {
   }
 }
 
-module.exports = Value;
+export = Value;
