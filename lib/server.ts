@@ -1,50 +1,56 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Node Web Thing server implementation.
  */
 
 'use strict';
 
-const bodyParser = require('body-parser');
-const dnssd = require('dnssd');
-const express = require('express');
-const expressWs = require('express-ws');
-const http = require('http');
-const https = require('https');
-const os = require('os');
-const utils = require('./utils');
+import bodyParser from 'body-parser';
+import dnssd from 'dnssd';
+import express from 'express';
+import expressWs from 'express-ws';
+import http from 'http';
+import https from 'https';
+import os from 'os';
+import utils from './utils';
+import Thing from './thing';
+
+import * as core from 'express-serve-static-core';
 
 /**
  * A container for a single thing.
  */
-class SingleThing {
+export class SingleThing {
+  private thing: Thing;
+
   /**
    * Initialize the container.
    *
    * @param {Object} thing The thing to store
    */
-  constructor(thing) {
+  constructor(thing: Thing) {
     this.thing = thing;
   }
 
   /**
    * Get the thing at the given index.
    */
-  getThing() {
+  getThing(): Thing {
     return this.thing;
   }
 
   /**
    * Get the list of things.
    */
-  getThings() {
+  getThings(): Thing[] {
     return [this.thing];
   }
 
   /**
    * Get the mDNS server name.
    */
-  getName() {
-    return this.thing.title;
+  getName(): string {
+    return this.thing.getTitle();
   }
 }
 
@@ -52,14 +58,18 @@ class SingleThing {
 /**
  * A container for multiple things.
  */
-class MultipleThings {
+export class MultipleThings {
+  private things: Thing[];
+
+  private name: string;
+
   /**
    * Initialize the container.
    *
    * @param {Object} things The things to store
    * @param {String} name The mDNS server name
    */
-  constructor(things, name) {
+  constructor(things: Thing[], name: string) {
     this.things = things;
     this.name = name;
   }
@@ -69,8 +79,8 @@ class MultipleThings {
    *
    * @param {Number|String} idx The index
    */
-  getThing(idx) {
-    idx = parseInt(idx);
+  getThing(idx?: number|string): Thing|null {
+    idx = parseInt(idx as any);
     if (isNaN(idx) || idx < 0 || idx >= this.things.length) {
       return null;
     }
@@ -81,14 +91,14 @@ class MultipleThings {
   /**
    * Get the list of things.
    */
-  getThings() {
+  getThings(): Thing[] {
     return this.things;
   }
 
   /**
    * Get the mDNS server name.
    */
-  getName() {
+  getName(): string {
     return this.name;
   }
 }
@@ -97,12 +107,14 @@ class MultipleThings {
  * Base handler that is initialized with a list of things.
  */
 class BaseHandler {
+  protected things: SingleThing|MultipleThings;
+
   /**
    * Initialize the handler.
    *
    * @param {Object} things List of Things managed by the server
    */
-  constructor(things) {
+  constructor(things: SingleThing|MultipleThings) {
     this.things = things;
   }
 
@@ -112,7 +124,7 @@ class BaseHandler {
    * @param {Object} req The request object
    * @returns {Object} The thing, or null if not found.
    */
-  getThing(req) {
+  getThing(req: any): Thing|null {
     return this.things.getThing(req.params.thingId);
   }
 }
@@ -127,11 +139,11 @@ class ThingsHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: any, res: core.Response): void {
     const wsHref = `${req.secure ? 'wss' : 'ws'}://${req.headers.host}`;
     res.json(
       this.things.getThings().map((thing) => {
-        const description = thing.asThingDescription();
+        const description = thing.asThingDescription() as any;
         description.href = thing.getHref();
         description.links.push({
           rel: 'alternate',
@@ -140,6 +152,7 @@ class ThingsHandler extends BaseHandler {
         description.base =
           `${req.protocol}://${req.headers.host}${thing.getHref()}`;
         description.securityDefinitions = {
+          // eslint-disable-next-line @typescript-eslint/camelcase
           nosec_sc: {
             scheme: 'nosec',
           },
@@ -161,7 +174,7 @@ class ThingHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -169,7 +182,7 @@ class ThingHandler extends BaseHandler {
     }
 
     const wsHref = `${req.secure ? 'wss' : 'ws'}://${req.headers.host}`;
-    const description = thing.asThingDescription();
+    const description = thing.asThingDescription() as any;
     description.links.push({
       rel: 'alternate',
       href: `${wsHref}${thing.getHref()}`,
@@ -177,6 +190,7 @@ class ThingHandler extends BaseHandler {
     description.base =
       `${req.protocol}://${req.headers.host}${thing.getHref()}`;
     description.securityDefinitions = {
+      // eslint-disable-next-line @typescript-eslint/camelcase
       nosec_sc: {
         scheme: 'nosec',
       },
@@ -192,7 +206,7 @@ class ThingHandler extends BaseHandler {
    * @param {Object} ws The websocket object
    * @param {Object} req The request object
    */
-  ws(ws, req) {
+  ws(ws: any, req: express.Request): void {
     const thing = this.getThing(req);
     if (thing === null) {
       ws.send(JSON.stringify({
@@ -210,7 +224,7 @@ class ThingHandler extends BaseHandler {
     ws.on('error', () => thing.removeSubscriber(ws));
     ws.on('close', () => thing.removeSubscriber(ws));
 
-    ws.on('message', (message) => {
+    ws.on('message', (message: string|any) => {
       try {
         message = JSON.parse(message);
       } catch (e1) {
@@ -325,7 +339,7 @@ class PropertiesHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -346,7 +360,7 @@ class PropertyHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -367,7 +381,7 @@ class PropertyHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  put(req, res) {
+  put(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -405,7 +419,7 @@ class ActionsHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -421,7 +435,7 @@ class ActionsHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  post(req, res) {
+  post(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -457,7 +471,7 @@ class ActionHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -475,7 +489,7 @@ class ActionHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  post(req, res) {
+  post(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -517,7 +531,7 @@ class ActionIDHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -542,7 +556,7 @@ class ActionIDHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  put(req, res) {
+  put(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -559,7 +573,7 @@ class ActionIDHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  delete(req, res) {
+  delete(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -587,7 +601,7 @@ class EventsHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -608,7 +622,7 @@ class EventHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req, res) {
+  get(req: core.Request<core.Dictionary<string>>, res: core.Response): void {
     const thing = this.getThing(req);
     if (thing === null) {
       res.status(404).end();
@@ -624,7 +638,28 @@ class EventHandler extends BaseHandler {
 /**
  * Server to represent a Web Thing over HTTP.
  */
-class WebThingServer {
+export class WebThingServer {
+  things: SingleThing|MultipleThings;
+
+  name: string;
+
+  port: number|null;
+
+  hostname: string|null;
+
+  basePath: string;
+
+  hosts: string[];
+
+  app: core.Express & {isTls?: boolean};
+
+  // HACK because the express types are weird
+  server: http.Server|https.Server;
+
+  router: expressWs.Router;
+
+  mdns!: dnssd.Advertisement;
+
   /**
    * Initialize the WebThingServer.
    *
@@ -641,11 +676,11 @@ class WebThingServer {
    * @param {String} basePath Base URL path to use, rather than '/'
    */
   constructor(
-    things,
-    port = null,
-    hostname = null,
-    sslOptions = null,
-    additionalRoutes = null,
+    things: SingleThing | MultipleThings,
+    port: number| null = null,
+    hostname: string|null = null,
+    sslOptions: https.ServerOptions|null = null,
+    additionalRoutes: any[]|null = null,
     basePath = '/'
   ) {
     this.things = things;
@@ -671,7 +706,7 @@ class WebThingServer {
       this.hosts.push(hostname, `${hostname}:${port}`);
     }
 
-    if (this.things.constructor.name === 'MultipleThings') {
+    if (things instanceof MultipleThings) {
       const list = things.getThings();
       for (let i = 0; i < list.length; i++) {
         const thing = list[i];
@@ -685,9 +720,9 @@ class WebThingServer {
     this.app.use(bodyParser.json());
 
     // Validate Host header
-    this.app.use((request, response, next) => {
+    this.app.use((request, response, next: () => unknown) => {
       const host = request.headers.host;
-      if (this.hosts.includes(host.toLowerCase())) {
+      if (!host || this.hosts.includes(host.toLowerCase())) {
         next();
       } else {
         response.status(403).send('Forbidden');
@@ -731,7 +766,7 @@ class WebThingServer {
         this.router.use(route.path, route.handler);
       }
     }
-    if (this.things.constructor.name === 'MultipleThings') {
+    if (this.things instanceof MultipleThings) {
       this.router.get('/', (req, res) => thingsHandler.get(req, res));
       this.router.get('/:thingId', (req, res) => thingHandler.get(req, res));
       this.router.ws('/:thingId', (ws, req) => thingHandler.ws(ws, req));
@@ -797,10 +832,10 @@ class WebThingServer {
    *
    * @returns {Promise} Promise which resolves once the server is started.
    */
-  start() {
+  start(): Promise<void> {
     this.mdns = new dnssd.Advertisement(
       new dnssd.ServiceType('_webthing._tcp'),
-      this.port,
+      this.port as number,
       {
         name: this.name,
         txt: {
@@ -826,23 +861,24 @@ class WebThingServer {
    * @param {boolean?} force - Whether or not to force shutdown immediately.
    * @returns {Promise} Promise which resolves once the server is stopped.
    */
-  stop(force = false) {
+  stop(force = false): Promise<unknown> {
     const promises = [];
 
     if (this.mdns) {
       promises.push(new Promise((resolve, reject) => {
-        this.mdns.stop(force, (error) => {
+        const stopCallback: any = (error: any) => {
           if (error) {
             reject(error);
           } else {
             resolve();
           }
-        });
+        };
+        this.mdns.stop(force, stopCallback);
       }));
     }
 
     promises.push(new Promise((resolve, reject) => {
-      this.server.close((error) => {
+      this.server.close((error: any) => {
         if (error) {
           reject(error);
         } else {
@@ -854,9 +890,3 @@ class WebThingServer {
     return Promise.all(promises);
   }
 }
-
-module.exports = {
-  MultipleThings,
-  SingleThing,
-  WebThingServer,
-};

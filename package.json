@@ -4,11 +4,12 @@
   "description": "HTTP Web Thing implementation",
   "main": "webthing.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "tsc --noEmit && eslint . --ext .ts --config ts.eslintrc.js && eslint . --ext .js --config js.eslintrc.js",
     "node": "NODE_PATH=. node",
     "start": "NODE_PATH=. node example/multiple-things",
     "test": "make test",
-    "simplest": "NODE_PATH=. node example/simplest-thing"
+    "simplest": "NODE_PATH=. node example/simplest-thing",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "url": "https://github.com/mozilla-iot/webthing-node/issues"
   },
   "homepage": "https://github.com/mozilla-iot/webthing-node#readme",
+  "types": "index.d.ts",
   "dependencies": {
     "ajv": "^6.10.2",
     "body-parser": "^1.19.0",
@@ -35,8 +37,17 @@
     "express-ws": "^4.0.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/dnssd": "^0.4.1",
+    "@types/express": "^4.17.1",
+    "@types/express-serve-static-core": "^4.16.10",
+    "@types/express-ws": "^3.0.0",
+    "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "@typescript-eslint/parser": "^2.4.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.2.2",
+    "typescript": "^3.6.4",
     "uuid": "^3.3.3"
   }
 }
