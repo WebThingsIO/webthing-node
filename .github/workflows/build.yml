@@ -1,4 +1,4 @@
-name: Node.js package
+name: Build
 
 on:
   pull_request:
@@ -13,7 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node_version: [8, 9, 10, 11, 12]
+        node-version: [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+        ]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-python@v1
@@ -21,7 +28,7 @@ jobs:
           python-version: '3.7'
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
           npm install
