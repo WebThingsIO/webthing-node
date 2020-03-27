@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.12.1] - 2020-03-27
+### Changed
+- Updated dependencies.
+
 ## [0.12.0] - 2019-07-12
 ### Changed
 - Things now use `title` rather than `name`.
@@ -23,7 +27,8 @@
 ### Changed
 - Property, Action, and Event description now use `links` rather than `href`. - [Spec PR](https://github.com/mozilla-iot/wot/pull/119)
 
-[Unreleased]: https://github.com/mozilla-iot/webthing-node/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/mozilla-iot/webthing-node/compare/v0.12.1...HEAD
+[0.12.1]: https://github.com/mozilla-iot/webthing-node/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/mozilla-iot/webthing-node/compare/v0.11.1...v0.12.0
 [0.11.1]: https://github.com/mozilla-iot/webthing-node/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/mozilla-iot/webthing-node/compare/v0.10.0...v0.11.0
