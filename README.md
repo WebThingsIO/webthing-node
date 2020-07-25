@@ -139,6 +139,10 @@ setInterval(() => {
 
 This will update our `Value` object with the sensor readings via the `this.level.notifyOfExternalUpdate(readFromGPIO());` call. The `Value` object now notifies the property and the thing that the value has changed, which in turn notifies all websocket listeners.
 
+# Adding to Gateway
+
+To add your web thing to the WebThings Gateway, install the "Web Thing" add-on and follow the instructions [here](https://github.com/mozilla-iot/thing-url-adapter#readme).
+
 # Resources
 
 * https://iot.mozilla.org/things/
