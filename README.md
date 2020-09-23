@@ -1,6 +1,6 @@
 # webthing
 
-[![Build Status](https://github.com/mozilla-iot/webthing-node/workflows/Node.js%20package/badge.svg)](https://github.com/mozilla-iot/webthing-node/workflows/Node.js%20package)
+[![Build Status](https://github.com/WebThingsIO/webthing-node/workflows/Node.js%20package/badge.svg)](https://github.com/WebThingsIO/webthing-node/workflows/Node.js%20package)
 [![NPM](https://img.shields.io/npm/v/webthing.svg)](https://www.npmjs.com/package/webthing)
 [![license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 
@@ -16,7 +16,7 @@ $ npm install webthing
 
 # Example
 
-In this example we will set up a dimmable light and a humidity sensor (both using fake data, of course). Both working examples can be found in [here](https://github.com/mozilla-iot/webthing-node/tree/master/example).
+In this example we will set up a dimmable light and a humidity sensor (both using fake data, of course). Both working examples can be found in [here](https://github.com/WebThingsIO/webthing-node/tree/master/example).
 
 ## Dimmable Light
 
@@ -141,7 +141,7 @@ This will update our `Value` object with the sensor readings via the `this.level
 
 # Adding to Gateway
 
-To add your web thing to the WebThings Gateway, install the "Web Thing" add-on and follow the instructions [here](https://github.com/mozilla-iot/thing-url-adapter#readme).
+To add your web thing to the WebThings Gateway, install the "Web Thing" add-on and follow the instructions [here](https://github.com/WebThingsIO/thing-url-adapter#readme).
 
 # Resources
 

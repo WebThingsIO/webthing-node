@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # clone the webthing-tester
-git clone https://github.com/mozilla-iot/webthing-tester
+git clone https://github.com/WebThingsIO/webthing-tester
 pip3 install --user -r webthing-tester/requirements.txt
 
 export NODE_PATH=.

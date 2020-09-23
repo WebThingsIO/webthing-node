@@ -1,6 +1,6 @@
 {
   "name": "webthing",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "description": "HTTP Web Thing implementation",
   "main": "webthing.js",
   "scripts": {
@@ -12,23 +12,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla-iot/webthing-node.git"
+    "url": "git+https://github.com/WebThingsIO/webthing-node.git"
   },
   "keywords": [
-    "mozilla",
     "iot",
     "web",
     "thing",
     "webthing"
   ],
-  "author": "Mozilla IoT",
+  "author": "WebThingsIO",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/mozilla-iot/webthing-node/issues"
+    "url": "https://github.com/WebThingsIO/webthing-node/issues"
   },
-  "homepage": "https://github.com/mozilla-iot/webthing-node#readme",
+  "homepage": "https://github.com/WebThingsIO/webthing-node#readme",
   "dependencies": {
-    "ajv": "^6.12.3",
+    "ajv": "^6.12.5",
     "body-parser": "^1.19.0",
     "dnssd": "^0.4.1",
     "express": "^4.17.1",
@@ -36,7 +35,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.4.0",
-    "uuid": "^8.2.0"
+    "eslint": "^7.9.0",
+    "uuid": "^8.3.0"
   }
 }
