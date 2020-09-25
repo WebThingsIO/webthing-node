@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
 # clone the webthing-tester
-git clone https://github.com/WebThingsIO/webthing-tester
+if [ ! -d webthing-tester ]; then
+    git clone https://github.com/WebThingsIO/webthing-tester
+fi
 pip3 install --user -r webthing-tester/requirements.txt
 
 export NODE_PATH=.
