@@ -14,12 +14,8 @@ jobs:
     strategy:
       matrix:
         node-version: [
-          8,
-          9,
           10,
-          11,
           12,
-          13,
           14,
         ]
     steps:
@@ -34,7 +30,6 @@ jobs:
         run: |
           npm ci
       - name: Lint with eslint
-        if: ${{ matrix.node-version >= 10 }}
         run: |
           npm run lint
       - name: Run integration tests
