@@ -24,15 +24,15 @@ jobs:
         ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm install
+          npm ci
       - name: Lint with eslint
         if: ${{ matrix.node-version >= 10 }}
         run: |
