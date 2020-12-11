@@ -18,7 +18,7 @@ class Value<ValueType = any> extends EventEmitter {
 
   private lastValue: ValueType;
 
-  private valueForwarder: Value.Forwarder<ValueType> | null;
+  private valueForwarder: Value.Forwarder<ValueType>|null;
 
   /**
    * Initialize the object.
@@ -28,7 +28,7 @@ class Value<ValueType = any> extends EventEmitter {
    *                                   on the thing
    */
   constructor(initialValue: ValueType,
-              valueForwarder: Value.Forwarder<ValueType> | null = null) {
+              valueForwarder: Value.Forwarder<ValueType>|null = null) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;

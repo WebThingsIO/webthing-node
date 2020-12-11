@@ -203,7 +203,7 @@ declare namespace Action {
       minimum?: number;
       maximum?: number;
       multipleOf?: number;
-      enum?: readonly string[] | readonly number[];
+      enum?: readonly string[]|readonly number[];
     };
   }
 

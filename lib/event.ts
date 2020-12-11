@@ -14,7 +14,7 @@ class Event<Data = any> {
 
   private name: string;
 
-  private data: Data | null;
+  private data: Data|null;
 
   private time: string;
 
@@ -74,7 +74,7 @@ class Event<Data = any> {
    *
    * @returns {*} The data.
    */
-  getData(): Data | null {
+  getData(): Data|null {
     return this.data;
   }
 
@@ -107,7 +107,7 @@ declare namespace Event {
     minimum?: number;
     maximum?: number;
     multipleOf?: number;
-    enum?: readonly string[] | readonly number[];
+    enum?: readonly string[]|readonly number[];
   }
 }
 

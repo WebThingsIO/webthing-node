@@ -87,7 +87,7 @@ class Thing {
    * @returns {Object} Current thing state
    */
   asThingDescription(): Thing.ThingDescription {
-    const thing: Omit<Thing.ThingDescription, 'name' | 'href'> = {
+    const thing: Omit<Thing.ThingDescription, 'name'|'href'> = {
       id: this.id,
       title: this.title,
       '@context': this.context,
@@ -164,7 +164,7 @@ class Thing {
    *
    * @returns {String|null} The href.
    */
-  getUiHref(): string | null {
+  getUiHref(): string|null {
     return this.uiHref;
   }
 
@@ -263,7 +263,7 @@ class Thing {
    * @returns {Object} Action descriptions.
    */
   getActionDescriptions(
-    actionName?: string | null
+    actionName?: string|null
   ): Action.ActionDescription[] {
     const descriptions: Action.ActionDescription[] = [];
 
@@ -289,7 +289,7 @@ class Thing {
    *
    * @returns {Object} Event descriptions.
    */
-  getEventDescriptions(eventName?: string | null): Event.EventDescription[] {
+  getEventDescriptions(eventName?: string|null): Event.EventDescription[] {
     if (!eventName) {
       return this.events.map((e) => e.asEventDescription());
     } else {
@@ -327,7 +327,7 @@ class Thing {
    *
    * @returns {(Object|null)} Property if found, else null
    */
-  findProperty(propertyName: string): (Property | null) {
+  findProperty(propertyName: string): Property|null {
     if (this.properties.hasOwnProperty(propertyName)) {
       return this.properties[propertyName];
     }
@@ -636,7 +636,7 @@ class Thing {
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Thing {
   export interface SecurityScheme {
-    '@type'?: string | string[];
+    '@type'?: string|string[];
     scheme: string
     description?: string
     descriptions?: {[lang: string]: string}

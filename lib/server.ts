@@ -101,7 +101,7 @@ export class MultipleThings {
 /**
  * Base handler that is initialized with a list of things.
  */
-class BaseHandler {
+abstract class BaseHandler {
   protected things: SingleThing|MultipleThings;
 
   /**
@@ -113,13 +113,15 @@ class BaseHandler {
     this.things = things;
   }
 
+  abstract get(req: express.Request, res: express.Response): void;
+
   /**
    * Get the thing this request is for.
    *
    * @param {Object} req The request object
    * @returns {Object} The thing, or null if not found.
    */
-  getThing(req: any): Thing|null {
+  getThing(req: express.Request): Thing|null {
     return this.things.getThing(req.params.thingId);
   }
 }
@@ -134,7 +136,7 @@ class ThingsHandler extends BaseHandler {
    * @param {Object} req The request object
    * @param {Object} res The response object
    */
-  get(req: any, res: express.Response): void {
+  get(req: express.Request, res: express.Response): void {
     const wsHref = `${req.secure ? 'wss' : 'ws'}://${req.headers.host}`;
     res.json(
       this.things.getThings().map((thing) => {
@@ -199,7 +201,7 @@ class ThingHandler extends BaseHandler {
    * @param {Object} ws The websocket object
    * @param {Object} req The request object
    */
-  ws(ws: any, req: express.Request): void {
+  ws(ws: import('ws'), req: express.Request): void {
     const thing = this.getThing(req);
     if (thing === null) {
       ws.send(JSON.stringify({
@@ -217,9 +219,13 @@ class ThingHandler extends BaseHandler {
     ws.on('error', () => thing.removeSubscriber(ws));
     ws.on('close', () => thing.removeSubscriber(ws));
 
-    ws.on('message', (message: string|any) => {
+    ws.on('message', (msg) => {
+      let message: {
+        messageType: string,
+        data: {[name: string]: any},
+      };
       try {
-        message = JSON.parse(message);
+        message = JSON.parse(msg as string);
       } catch (e1) {
         try {
           ws.send(JSON.stringify({
@@ -681,8 +687,8 @@ export class WebThingServer {
    * @param {String} basePath Base URL path to use, rather than '/'
    */
   constructor(
-    things: SingleThing | MultipleThings,
-    port: number| null = null,
+    things: SingleThing|MultipleThings,
+    port: number|null = null,
     hostname: string|null = null,
     sslOptions: https.ServerOptions|null = null,
     additionalRoutes: any[]|null = null,
@@ -889,7 +895,7 @@ export class WebThingServer {
     }
 
     promises.push(new Promise((resolve, reject) => {
-      this.server.close((error: any) => {
+      this.server.close((error) => {
         if (error) {
           reject(error);
         } else {

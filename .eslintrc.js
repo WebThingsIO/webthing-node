@@ -258,6 +258,7 @@ module.exports = {
       'error',
       'never'
     ],
+    '@typescript-eslint/type-annotation-spacing': 'error',
     'yoda': 'error'
   },
   'overrides': [
