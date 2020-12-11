@@ -124,13 +124,11 @@ check/npm:
 
 check: check/${runtime}
 
-eslint: js.eslintrc.js ts.eslintrc.js ${eslint}
+eslint: .eslintrc.js ${eslint}
 	@rm -rf tmp/dist
-	${eslint} --no-color --fix . --config js.eslintrc.js ||:
-	${eslint} --no-color . --config js.eslintrc.js
+	${eslint} --no-color --fix . ||:
+	${eslint} --no-color .
 	${tsc}
-	${eslint} --no-color --fix . --ext .ts --config ts.eslintrc.js ||:
-	${eslint} --no-color . --ext .ts --config ts.eslintrc.js
 	git diff --exit-code
 
 eslint/setup: node_modules
@@ -141,10 +139,7 @@ ${eslint}:
 	ls $@ || make eslint/setup
 	touch $@
 
-js.eslintrc.js: ${eslint}
-	ls $@ || $< --init
-
-ts.eslintrc.js: ${eslint}
+.eslintrc.js: ${eslint}
 	ls $@ || $< --init
 
 lint/%: eslint
@@ -152,4 +147,3 @@ lint/%: eslint
 
 lint: lint/${runtime}
 	sync
-
