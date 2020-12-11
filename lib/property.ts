@@ -2,25 +2,24 @@
  * High-level Property base class implementation.
  */
 
-'use strict';
-
-import Ajv from 'ajv';
-import Thing from './thing';
-import Value from './value';
+import Ajv = require('ajv');
+import Thing = require('./thing');
+import Value = require('./value');
 import {PrimitiveJsonType, Link} from './types';
+
 const ajv = new Ajv();
 
 
 /**
  * A Property represents an individual state value of a thing.
  */
-class Property {
+class Property<ValueType = any> {
 
-  private thing: Thing
+  private thing: Thing;
 
   private name: string;
 
-  private value: Value;
+  private value: Value<ValueType>;
 
   private metadata: Property.PropertyMetadata;
 
@@ -39,7 +38,7 @@ class Property {
    */
   constructor(thing: Thing,
               name: string,
-              value: Value,
+              value: Value<ValueType>,
               metadata: Property.PropertyMetadata) {
     this.thing = thing;
     this.name = name;
@@ -59,7 +58,7 @@ class Property {
    * @param {*} value - New value
    * @throws Error if the property is readonly or is invalid
    */
-  validateValue(value: any): void {
+  validateValue(value: any): asserts value is ValueType {
     if (this.metadata.hasOwnProperty('readOnly') && this.metadata.readOnly) {
       throw new Error('Read-only property');
     }
@@ -114,7 +113,7 @@ class Property {
    *
    * @returns {*} The current value
    */
-  getValue(): any {
+  getValue(): ValueType {
     return this.value.get();
   }
 
@@ -123,7 +122,7 @@ class Property {
    *
    * @param {*} value The value to set
    */
-  setValue(value: any): void {
+  setValue(value: ValueType): void {
     this.validateValue(value);
     this.value.set(value);
   }

@@ -2,21 +2,19 @@
  * High-level Event base class implementation.
  */
 
-'use strict';
-
 import Thing = require('./thing');
-import utils from './utils';
+import * as utils from './utils';
 import {PrimitiveJsonType, Link} from './types';
 
 /**
  * An Event represents an individual event from a thing.
  */
-class Event {
+class Event<Data = any> {
   private thing: Thing;
 
   private name: string;
 
-  private data: any;
+  private data: Data | null;
 
   private time: string;
 
@@ -27,7 +25,7 @@ class Event {
    * @param {String} name Name of the event
    * @param {*} data (Optional) Data associated with the event
    */
-  constructor(thing: Thing, name: string, data: any) {
+  constructor(thing: Thing, name: string, data?: Data) {
     this.thing = thing;
     this.name = name;
     this.data = typeof data !== 'undefined' ? data : null;
@@ -76,7 +74,7 @@ class Event {
    *
    * @returns {*} The data.
    */
-  getData(): any {
+  getData(): Data | null {
     return this.data;
   }
 
@@ -106,9 +104,10 @@ declare namespace Event {
     title?: string;
     description?: string;
     links?: Link[];
-    manimum?: number;
+    minimum?: number;
     maximum?: number;
     multipleOf?: number;
+    enum?: readonly string[] | readonly number[];
   }
 }
 

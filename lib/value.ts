@@ -2,9 +2,7 @@
  * An observable, settable value interface.
  */
 
-'use strict';
-
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 
 /**
  * A property value.
@@ -16,11 +14,11 @@ import EventEmitter from 'events';
  * update (command to turn the light off) or if the underlying sensor reports a
  * new value.
  */
-class Value extends EventEmitter {
+class Value<ValueType = any> extends EventEmitter {
 
-  private lastValue: any
+  private lastValue: ValueType;
 
-  private valueForwarder: ((value: any) => void) |null
+  private valueForwarder: Value.Forwarder<ValueType> | null;
 
   /**
    * Initialize the object.
@@ -29,8 +27,8 @@ class Value extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue: any,
-              valueForwarder: ((value: any) => void)|null = null) {
+  constructor(initialValue: ValueType,
+              valueForwarder: Value.Forwarder<ValueType> | null = null) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
@@ -41,7 +39,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value Value to set
    */
-  set(value: any): void {
+  set(value: ValueType): void {
     if (this.valueForwarder) {
       this.valueForwarder(value);
     }
@@ -54,7 +52,7 @@ class Value extends EventEmitter {
    *
    * @returns the value.
    */
-  get(): any {
+  get(): ValueType {
     return this.lastValue;
   }
 
@@ -63,7 +61,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value New value
    */
-  notifyOfExternalUpdate(value: any): void {
+  notifyOfExternalUpdate(value: ValueType): void {
     if (typeof value !== 'undefined' &&
         value !== null &&
         value !== this.lastValue) {
@@ -71,6 +69,10 @@ class Value extends EventEmitter {
       this.emit('update', value);
     }
   }
+}
+
+declare namespace Value {
+  export type Forwarder<T> = (value: T) => void;
 }
 
 export = Value;

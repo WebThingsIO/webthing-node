@@ -1,17 +1,18 @@
 export type PrimitiveJsonType = 'null' | 'boolean' |
-'object' | 'array' | 'number' | 'integer' | 'string'
+'object' | 'array' | 'number' | 'integer' | 'string';
 
 export interface Link {
-    rel: string;
-    href: string;
-    mediaType?: string;
+  rel: string;
+  href: string;
+  mediaType?: string;
 }
 
-// TODO:
-// https://iot.mozilla.org/wot/#example-7-action-object
-// seems to imply input could be typed?
+/**
+ * Input can be any type.
+ * @see https://iot.mozilla.org/wot/#example-7-action-object
+ */
 export type InputType = any;
 
 export interface Subscriber {
-    send(message: string): void;
+  send(message: string): void;
 }

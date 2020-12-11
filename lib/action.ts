@@ -2,10 +2,8 @@
  * High-level Action base class implementation.
  */
 
-'use strict';
-
-import utils = require('./utils');
-import {Link, InputType} from './types';
+import * as utils from './utils';
+import {Link, InputType, PrimitiveJsonType} from './types';
 import Thing = require('./thing');
 
 /**
@@ -200,10 +198,13 @@ declare namespace Action {
     title?: string;
     description?: string;
     links?: Link[];
-    // TODO:
-    // https://iot.mozilla.org/wot/#example-7-action-object s
-    // seems to indicate hat input maybe shouldn't be 'any?'
-    input?: InputType;
+    input?: {
+      type?: PrimitiveJsonType;
+      minimum?: number;
+      maximum?: number;
+      multipleOf?: number;
+      enum?: readonly string[] | readonly number[];
+    };
   }
 
   interface ActionDescription {

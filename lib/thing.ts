@@ -2,44 +2,53 @@
  * High-level Thing base class implementation.
  */
 
-'use strict';
-
-import Ajv from 'ajv';
+import Ajv = require('ajv');
 import Property = require('./property');
-import Event from './event';
-import Action from './action';
+import Event = require('./event');
+import Action = require('./action');
 import {Link, Subscriber} from './types';
+
 const ajv = new Ajv();
 
 /**
  * A Web Thing.
  */
 class Thing {
-  private id: string
+  private id: string;
 
-  private title: string
+  private title: string;
 
-  private type: string[]
+  private type: string[];
 
-  private context: string
+  private context: string;
 
-  private description: string
+  private description: string;
 
   private properties: {[name: string]: Property};
 
-  private availableActions: any
+  private availableActions: {
+    [actionName: string]: {
+      metadata: Action.ActionMetadata,
+      class: InstanceType<Action.ActionTypeClass>,
+    }
+  };
 
-  private availableEvents: any
+  private availableEvents: {
+    [name: string]: {
+      metadata: Event.EventMetadata,
+      subscribers: Set<Subscriber>,
+    }
+  };
 
-  private actions: {[name: string]: Action[]}
+  private actions: {[name: string]: Action[]};
 
-  private events: Event[]
+  private events: Event[];
 
   private subscribers = new Set<Subscriber>();
 
-  private hrefPrefix: string
+  private hrefPrefix: string;
 
-  private uiHref: string|null
+  private uiHref: string|null;
 
   /**
    * Initialize the object.
@@ -78,7 +87,7 @@ class Thing {
    * @returns {Object} Current thing state
    */
   asThingDescription(): Thing.ThingDescription {
-    const thing: any = {
+    const thing: Omit<Thing.ThingDescription, 'name' | 'href'> = {
       id: this.id,
       title: this.title,
       '@context': this.context,
@@ -253,8 +262,10 @@ class Thing {
    *
    * @returns {Object} Action descriptions.
    */
-  getActionDescriptions(actionName?: string | null): object {
-    const descriptions = [];
+  getActionDescriptions(
+    actionName?: string | null
+  ): Action.ActionDescription[] {
+    const descriptions: Action.ActionDescription[] = [];
 
     if (!actionName) {
       for (const name in this.actions) {
@@ -437,7 +448,7 @@ class Thing {
    * @param {Object} input Any action inputs
    * @returns {Object} The action that was created.
    */
-  performAction(actionName: string, input: object): Action|undefined {
+  performAction(actionName: string, input: any): Action|undefined {
     input = input || null;
 
     if (!this.availableActions.hasOwnProperty(actionName)) {
@@ -447,13 +458,13 @@ class Thing {
     const actionType = this.availableActions[actionName];
 
     if (actionType.metadata.hasOwnProperty('input')) {
-      const valid = ajv.validate(actionType.metadata.input, input);
+      const valid = ajv.validate(actionType.metadata.input!, input);
       if (!valid) {
         return;
       }
     }
 
-    const action: Action = new actionType.class(this, input);
+    const action: Action = new actionType.class(this, input) as any;
     action.setHrefPrefix(this.hrefPrefix);
     this.actionNotify(action);
     this.actions[actionName].push(action);
@@ -624,6 +635,14 @@ class Thing {
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Thing {
+  export interface SecurityScheme {
+    '@type'?: string | string[];
+    scheme: string
+    description?: string
+    descriptions?: {[lang: string]: string}
+    proxy?: string
+  }
+
   export interface ThingDescription {
     id: string;
     title: string;
@@ -633,9 +652,12 @@ declare namespace Thing {
     '@type': string[];
     properties: { [name: string]: Property.PropertyDescription };
     links: Link[];
-    actions: Action.ActionMetadata;
-    events: Event.EventMetadata;
+    actions: {[name: string]: Action.ActionMetadata};
+    events: {[name: string]: Event.EventMetadata};
     description?: string;
+    base?: string
+    securityDefinitions?: {[security: string]: SecurityScheme}
+    security?: string
   }
 }
 

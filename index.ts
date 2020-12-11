@@ -1,3 +1,3 @@
-'use strict';
-import webthing from './webthing';
+import webthing = require('./webthing');
+
 export = webthing;
