@@ -3,13 +3,13 @@
  */
 
 import * as utils from './utils';
-import {Link, InputType, PrimitiveJsonType} from './types';
+import {Link, PrimitiveJsonType} from './types';
 import Thing = require('./thing');
 
 /**
  * An Action represents an individual action on a thing.
  */
-class Action {
+class Action<InputType = any> {
 
   private id: string;
 
@@ -207,7 +207,7 @@ declare namespace Action {
     };
   }
 
-  interface ActionDescription {
+  interface ActionDescription<InputType = any> {
     [name: string]: {
       href: string;
       timeRequested: string;
@@ -217,9 +217,9 @@ declare namespace Action {
     };
   }
 
-  export interface ActionTypeClass {
+  export interface ActionTypeClass<InputType = any> {
     // eslint-disable-next-line @typescript-eslint/no-misused-new
-    new(thing: Thing, input: InputType): ActionTypeClass;
+    new (thing: Thing, input: InputType): Action<InputType>;
   }
 }
 

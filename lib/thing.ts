@@ -29,7 +29,7 @@ class Thing {
   private availableActions: {
     [actionName: string]: {
       metadata: Action.ActionMetadata,
-      class: InstanceType<Action.ActionTypeClass>,
+      class: Action.ActionTypeClass,
     }
   };
 
@@ -448,7 +448,10 @@ class Thing {
    * @param {Object} input Any action inputs
    * @returns {Object} The action that was created.
    */
-  performAction(actionName: string, input: any): Action|undefined {
+  performAction<InputType = any>(
+    actionName: string,
+    input: InputType | null
+  ): Action<InputType>|undefined {
     input = input || null;
 
     if (!this.availableActions.hasOwnProperty(actionName)) {
@@ -464,7 +467,7 @@ class Thing {
       }
     }
 
-    const action: Action = new actionType.class(this, input) as any;
+    const action: Action<InputType> = new actionType.class(this, input);
     action.setHrefPrefix(this.hrefPrefix);
     this.actionNotify(action);
     this.actions[actionName].push(action);
@@ -505,7 +508,7 @@ class Thing {
    */
   addAvailableAction(name: string,
                      metadata: Action.ActionMetadata|null,
-                     cls: InstanceType<Action.ActionTypeClass>): void {
+                     cls: Action.ActionTypeClass): void {
     if (!metadata) {
       metadata = {};
     }
