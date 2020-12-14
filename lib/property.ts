@@ -2,25 +2,44 @@
  * High-level Property base class implementation.
  */
 
-'use strict';
+import Ajv = require('ajv');
+import Thing = require('./thing');
+import Value = require('./value');
+import {PrimitiveJsonType, Link} from './types';
 
-const Ajv = require('ajv');
 const ajv = new Ajv();
+
 
 /**
  * A Property represents an individual state value of a thing.
  */
-class Property {
+class Property<ValueType = any> {
+
+  private thing: Thing;
+
+  private name: string;
+
+  private value: Value<ValueType>;
+
+  private metadata: Property.PropertyMetadata;
+
+  private href: string;
+
+  private hrefPrefix: string;
+
   /**
    * Initialize the object.
    *
-   * @param {Object} thing Thing this property belongs to
+   * @param {Thing} thing Thing this property belongs to
    * @param {String} name Name of the property
    * @param {Value} value Value object to hold the property value
    * @param {Object} metadata Property metadata, i.e. type, description, unit,
    *                          etc., as an object.
    */
-  constructor(thing, name, value, metadata) {
+  constructor(thing: Thing,
+              name: string,
+              value: Value<ValueType>,
+              metadata: Property.PropertyMetadata) {
     this.thing = thing;
     this.name = name;
     this.value = value;
@@ -37,8 +56,9 @@ class Property {
    * Validate new property value before setting it.
    *
    * @param {*} value - New value
+   * @throws Error if the property is readonly or is invalid
    */
-  validateValue(value) {
+  validateValue(value: any): asserts value is ValueType {
     if (this.metadata.hasOwnProperty('readOnly') && this.metadata.readOnly) {
       throw new Error('Read-only property');
     }
@@ -54,7 +74,7 @@ class Property {
    *
    * @returns {Object} Description of the property as an object.
    */
-  asPropertyDescription() {
+  asPropertyDescription(): Property.PropertyDescription {
     const description = JSON.parse(JSON.stringify(this.metadata));
 
     if (!description.hasOwnProperty('links')) {
@@ -75,7 +95,7 @@ class Property {
    *
    * @param {String} prefix The prefix
    */
-  setHrefPrefix(prefix) {
+  setHrefPrefix(prefix: string): void {
     this.hrefPrefix = prefix;
   }
 
@@ -84,7 +104,7 @@ class Property {
    *
    * @returns {String} The href
    */
-  getHref() {
+  getHref(): string {
     return `${this.hrefPrefix}${this.href}`;
   }
 
@@ -93,7 +113,7 @@ class Property {
    *
    * @returns {*} The current value
    */
-  getValue() {
+  getValue(): ValueType {
     return this.value.get();
   }
 
@@ -102,7 +122,7 @@ class Property {
    *
    * @param {*} value The value to set
    */
-  setValue(value) {
+  setValue(value: ValueType): void {
     this.validateValue(value);
     this.value.set(value);
   }
@@ -112,7 +132,7 @@ class Property {
    *
    * @returns {String} The property name.
    */
-  getName() {
+  getName(): string {
     return this.name;
   }
 
@@ -121,7 +141,7 @@ class Property {
    *
    * @returns {Object} The thing.
    */
-  getThing() {
+  getThing(): Thing {
     return this.thing;
   }
 
@@ -130,9 +150,31 @@ class Property {
    *
    * @returns {Object} The metadata
    */
-  getMetadata() {
+  getMetadata(): Property.PropertyMetadata {
     return this.metadata;
   }
 }
 
-module.exports = Property;
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Property {
+  // could we use .type to strongly type the enum, minimum and maximum?
+  interface PropertyMetadata {
+    type?: PrimitiveJsonType;
+    '@type'?: string;
+    unit?: string;
+    title?: string;
+    description?: string;
+    links?: Link[];
+    enum?: any[];
+    readOnly?: boolean;
+    minimum?: number;
+    maximum?: number;
+    multipleOf?: number;
+  }
+
+  interface PropertyDescription extends PropertyMetadata {
+    links: Link[];
+  }
+}
+
+export = Property;

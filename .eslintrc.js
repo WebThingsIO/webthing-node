@@ -8,11 +8,15 @@ module.exports = {
     'mocha': true,
     'node': true
   },
-  'extends': 'eslint:recommended',
-  'parser': 'babel-eslint',
+  'extends': ['eslint:recommended',
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  'parser': '@typescript-eslint/parser',
   'parserOptions': {
     'sourceType': 'module'
   },
+  "plugins": ["@typescript-eslint"],
   'rules': {
     'arrow-parens': [
       'error',
@@ -24,15 +28,15 @@ module.exports = {
       'error',
       'always'
     ],
-    'brace-style': [
+    '@typescript-eslint/brace-style': [
       'error',
       '1tbs'
     ],
-    'comma-dangle': [
+    '@typescript-eslint/comma-dangle': [
       'error',
       'always-multiline'
     ],
-    'comma-spacing': 'error',
+    '@typescript-eslint/comma-spacing': 'error',
     'comma-style': [
       'error',
       'last'
@@ -44,7 +48,13 @@ module.exports = {
     'curly': 'error',
     'dot-notation': 'error',
     'eol-last': 'error',
-    'func-call-spacing': [
+    '@typescript-eslint/explicit-module-boundary-types': [
+      'warn',
+      {
+        allowArgumentsExplicitlyTypedAsAny: true
+      }
+    ],
+    '@typescript-eslint/func-call-spacing': [
       'error',
       'never'
     ],
@@ -52,7 +62,7 @@ module.exports = {
       'error',
       'beside'
     ],
-    'indent': [
+    '@typescript-eslint/indent': [
       'error',
       2,
       {
@@ -78,7 +88,7 @@ module.exports = {
         'mode': 'strict'
       }
     ],
-    'keyword-spacing': [
+    '@typescript-eslint/keyword-spacing': [
       'error',
       {
         'after': true,
@@ -89,7 +99,7 @@ module.exports = {
       'error',
       'unix'
     ],
-    'lines-between-class-members': [
+    '@typescript-eslint/lines-between-class-members': [
       'error',
       'always'
     ],
@@ -102,8 +112,9 @@ module.exports = {
       'always-multiline'
     ],
     'no-console': 0,
-    'no-duplicate-imports': 'error',
+    '@typescript-eslint/no-duplicate-imports': 'error',
     'no-eval': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
     'no-floating-decimal': 'error',
     'no-implicit-globals': 'error',
     'no-implied-eval': 'error',
@@ -115,6 +126,13 @@ module.exports = {
       }
     ],
     'no-multiple-empty-lines': 'error',
+    '@typescript-eslint/no-namespace': [
+      'error',
+      {
+        allowDeclarations: true
+      }
+    ],
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'no-prototype-builtins': 'off',
     'no-return-assign': 'error',
     'no-script-url': 'error',
@@ -125,7 +143,7 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'no-undefined': 'error',
     'no-unmodified-loop-condition': 'error',
-    'no-unused-vars': [
+    '@typescript-eslint/no-unused-vars': [
       'error',
       {
         'argsIgnorePattern': '^_',
@@ -134,7 +152,7 @@ module.exports = {
     ],
     'no-useless-computed-key': 'error',
     'no-useless-concat': 'error',
-    'no-useless-constructor': 'error',
+    '@typescript-eslint/no-useless-constructor': 'error',
     'no-useless-return': 'error',
     'no-var': 'error',
     'no-void': 'error',
@@ -171,14 +189,14 @@ module.exports = {
       'error',
       'as-needed'
     ],
-    'quotes': [
+    '@typescript-eslint/quotes': [
       'error',
       'single',
       {
         'allowTemplateLiterals': true
       }
     ],
-    'semi': [
+    '@typescript-eslint/semi': [
       'error',
       'always'
     ],
@@ -197,7 +215,7 @@ module.exports = {
       'error',
       'always'
     ],
-    'space-before-function-paren': [
+    '@typescript-eslint/space-before-function-paren': [
       'error',
       {
         'anonymous': 'never',
@@ -240,6 +258,17 @@ module.exports = {
       'error',
       'never'
     ],
+    '@typescript-eslint/type-annotation-spacing': 'error',
     'yoda': 'error'
-  }
+  },
+  'overrides': [
+    {
+      'files': ['example/**/*.js'],
+      'rules': {
+        '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-this-alias': 'off',
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
+  ]
 };

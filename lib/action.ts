@@ -2,15 +2,34 @@
  * High-level Action base class implementation.
  */
 
-'use strict';
-
-const utils = require('./utils');
+import * as utils from './utils';
+import {Link, PrimitiveJsonType} from './types';
+import Thing = require('./thing');
 
 /**
  * An Action represents an individual action on a thing.
  */
-class Action {
-  constructor(id, thing, name, input) {
+class Action<InputType = any> {
+
+  private id: string;
+
+  private thing: Thing;
+
+  private name: string;
+
+  private input: InputType;
+
+  private hrefPrefix: string;
+
+  private href: string;
+
+  private status: string;
+
+  private timeRequested: string;
+
+  private timeCompleted: string|null;
+
+  constructor(id: string, thing: Thing, name: string, input: InputType) {
     /**
      * Initialize the object.
      *
@@ -35,8 +54,8 @@ class Action {
    *
    * @returns {Object} Description of the action as an object.
    */
-  asActionDescription() {
-    const description = {
+  asActionDescription(): Action.ActionDescription {
+    const description: Action.ActionDescription = {
       [this.name]: {
         href: this.hrefPrefix + this.href,
         timeRequested: this.timeRequested,
@@ -60,7 +79,7 @@ class Action {
    *
    * @param {String} prefix The prefix
    */
-  setHrefPrefix(prefix) {
+  setHrefPrefix(prefix: string): void {
     this.hrefPrefix = prefix;
   }
 
@@ -69,7 +88,7 @@ class Action {
    *
    * @returns {String} The ID.
    */
-  getId() {
+  getId(): string {
     return this.id;
   }
 
@@ -78,7 +97,7 @@ class Action {
    *
    * @returns {String} The name.
    */
-  getName() {
+  getName(): string {
     return this.name;
   }
 
@@ -87,7 +106,7 @@ class Action {
    *
    * @returns {String} The href.
    */
-  getHref() {
+  getHref(): string {
     return this.hrefPrefix + this.href;
   }
 
@@ -96,7 +115,7 @@ class Action {
    *
    * @returns {String} The status.
    */
-  getStatus() {
+  getStatus(): string {
     return this.status;
   }
 
@@ -105,7 +124,7 @@ class Action {
    *
    * @returns {Object} The thing.
    */
-  getThing() {
+  getThing(): Thing {
     return this.thing;
   }
 
@@ -114,7 +133,7 @@ class Action {
    *
    * @returns {String} The time.
    */
-  getTimeRequested() {
+  getTimeRequested(): string {
     return this.timeRequested;
   }
 
@@ -123,7 +142,7 @@ class Action {
    *
    * @returns {String} The time.
    */
-  getTimeCompleted() {
+  getTimeCompleted(): string|null {
     return this.timeCompleted;
   }
 
@@ -132,14 +151,14 @@ class Action {
    *
    * @returns {Object} The inputs.
    */
-  getInput() {
+  getInput(): InputType {
     return this.input;
   }
 
   /**
    * Start performing the action.
    */
-  start() {
+  start(): void {
     this.status = 'pending';
     this.thing.actionNotify(this);
     this.performAction().then(() => this.finish(), () => this.finish());
@@ -150,7 +169,7 @@ class Action {
    *
    * @returns {Object} Promise that resolves when the action is finished.
    */
-  performAction() {
+  performAction(): Promise<void> {
     return Promise.resolve();
   }
 
@@ -159,18 +178,49 @@ class Action {
    *
    * @returns {Object} Promise that resolves when the action is cancelled.
    */
-  cancel() {
+  cancel(): Promise<void> {
     return Promise.resolve();
   }
 
   /**
    * Finish performing the action.
    */
-  finish() {
+  finish(): void {
     this.status = 'completed';
     this.timeCompleted = utils.timestamp();
     this.thing.actionNotify(this);
   }
 }
 
-module.exports = Action;
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Action {
+  interface ActionMetadata {
+    title?: string;
+    description?: string;
+    links?: Link[];
+    input?: {
+      type?: PrimitiveJsonType;
+      minimum?: number;
+      maximum?: number;
+      multipleOf?: number;
+      enum?: readonly string[]|readonly number[];
+    };
+  }
+
+  interface ActionDescription<InputType = any> {
+    [name: string]: {
+      href: string;
+      timeRequested: string;
+      status: string;
+      input?: InputType;
+      timeCompleted?: string;
+    };
+  }
+
+  export interface ActionTypeClass<InputType = any> {
+    // eslint-disable-next-line @typescript-eslint/no-misused-new
+    new (thing: Thing, input: InputType): Action<InputType>;
+  }
+}
+
+export = Action;

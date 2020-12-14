@@ -2,14 +2,22 @@
  * High-level Event base class implementation.
  */
 
-'use strict';
-
-const utils = require('./utils');
+import Thing = require('./thing');
+import * as utils from './utils';
+import {PrimitiveJsonType, Link} from './types';
 
 /**
  * An Event represents an individual event from a thing.
  */
-class Event {
+class Event<Data = any> {
+  private thing: Thing;
+
+  private name: string;
+
+  private data: Data|null;
+
+  private time: string;
+
   /**
    * Initialize the object.
    *
@@ -17,7 +25,7 @@ class Event {
    * @param {String} name Name of the event
    * @param {*} data (Optional) Data associated with the event
    */
-  constructor(thing, name, data) {
+  constructor(thing: Thing, name: string, data?: Data) {
     this.thing = thing;
     this.name = name;
     this.data = typeof data !== 'undefined' ? data : null;
@@ -29,8 +37,8 @@ class Event {
    *
    * @returns {Object} Description of the event as an object.
    */
-  asEventDescription() {
-    const description = {
+  asEventDescription(): Event.EventDescription {
+    const description: Event.EventDescription = {
       [this.name]: {
         timestamp: this.time,
       },
@@ -48,7 +56,7 @@ class Event {
    *
    * @returns {Object} The thing.
    */
-  getThing() {
+  getThing(): Thing {
     return this.thing;
   }
 
@@ -57,7 +65,7 @@ class Event {
    *
    * @returns {String} The name.
    */
-  getName() {
+  getName(): string {
     return this.name;
   }
 
@@ -66,7 +74,7 @@ class Event {
    *
    * @returns {*} The data.
    */
-  getData() {
+  getData(): Data|null {
     return this.data;
   }
 
@@ -75,9 +83,32 @@ class Event {
    *
    * @returns {String} The time.
    */
-  getTime() {
+  getTime(): string {
     return this.time;
   }
 }
 
-module.exports = Event;
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Event {
+  interface EventDescription {
+    [name: string]: {
+      timestamp: string;
+      data?: any;
+    };
+  }
+
+  interface EventMetadata {
+    type?: PrimitiveJsonType;
+    '@type'?: string;
+    unit?: string;
+    title?: string;
+    description?: string;
+    links?: Link[];
+    minimum?: number;
+    maximum?: number;
+    multipleOf?: number;
+    enum?: readonly string[]|readonly number[];
+  }
+}
+
+export = Event;

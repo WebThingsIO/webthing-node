@@ -2,9 +2,7 @@
  * An observable, settable value interface.
  */
 
-'use strict';
-
-const EventEmitter = require('events');
+import {EventEmitter} from 'events';
 
 /**
  * A property value.
@@ -16,7 +14,12 @@ const EventEmitter = require('events');
  * update (command to turn the light off) or if the underlying sensor reports a
  * new value.
  */
-class Value extends EventEmitter {
+class Value<ValueType = any> extends EventEmitter {
+
+  private lastValue: ValueType;
+
+  private valueForwarder: Value.Forwarder<ValueType>|null;
+
   /**
    * Initialize the object.
    *
@@ -24,7 +27,8 @@ class Value extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue, valueForwarder = null) {
+  constructor(initialValue: ValueType,
+              valueForwarder: Value.Forwarder<ValueType>|null = null) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
@@ -35,7 +39,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value Value to set
    */
-  set(value) {
+  set(value: ValueType): void {
     if (this.valueForwarder) {
       this.valueForwarder(value);
     }
@@ -48,7 +52,7 @@ class Value extends EventEmitter {
    *
    * @returns the value.
    */
-  get() {
+  get(): ValueType {
     return this.lastValue;
   }
 
@@ -57,7 +61,7 @@ class Value extends EventEmitter {
    *
    * @param {*} value New value
    */
-  notifyOfExternalUpdate(value) {
+  notifyOfExternalUpdate(value: ValueType): void {
     if (typeof value !== 'undefined' &&
         value !== null &&
         value !== this.lastValue) {
@@ -67,4 +71,8 @@ class Value extends EventEmitter {
   }
 }
 
-module.exports = Value;
+declare namespace Value {
+  export type Forwarder<T> = (value: T) => void;
+}
+
+export = Value;

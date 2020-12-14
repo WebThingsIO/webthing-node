@@ -15,7 +15,8 @@ tmp_dir ?= tmp
 runtime ?= node
 export runtime
 eslint ?= node_modules/eslint/bin/eslint.js
-srcs ?= $(wildcard *.js lib/*.js | sort | uniq)
+tsc ?= node_modules/typescript/bin/tsc
+srcs ?= $(wildcard *.ts lib/*.ts | sort | uniq)
 run_args ?=
 run_timeout ?= 10
 
@@ -127,6 +128,7 @@ eslint: .eslintrc.js ${eslint}
 	@rm -rf tmp/dist
 	${eslint} --no-color --fix . ||:
 	${eslint} --no-color .
+	${tsc}
 	git diff --exit-code
 
 eslint/setup: node_modules
@@ -145,4 +147,3 @@ lint/%: eslint
 
 lint: lint/${runtime}
 	sync
-
