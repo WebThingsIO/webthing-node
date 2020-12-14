@@ -26,9 +26,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
+      - name: Build project
         run: |
           npm ci
+          npm run build
       - name: Lint with eslint
         run: |
           npm run lint
