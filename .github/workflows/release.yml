@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   build:
@@ -29,6 +29,14 @@ jobs:
           release_name: Release ${{ env.RELEASE_VERSION }}
           draft: false
           prerelease: false
+
+      - name: Build project
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+        env:
+          CI: true
 
       - name: Publish to npm
         run: npm publish

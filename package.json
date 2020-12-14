@@ -4,12 +4,12 @@
   "description": "HTTP Web Thing implementation",
   "main": "webthing.js",
   "scripts": {
-    "lint": "tsc --noEmit && eslint . --ext .js,.ts",
+    "lint": "tsc --noEmit && eslint . --ext .ts",
     "node": "NODE_PATH=. node",
     "start": "NODE_PATH=. node example/multiple-things",
     "test": "make test",
     "simplest": "NODE_PATH=. node example/simplest-thing",
-    "prepare": "tsc"
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
