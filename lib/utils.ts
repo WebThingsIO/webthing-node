@@ -24,7 +24,7 @@ export function getAddresses(): string[] {
 
   const ifaces = os.networkInterfaces();
   Object.keys(ifaces).forEach((iface) => {
-    ifaces[iface].forEach((addr) => {
+    ifaces[iface]!.forEach((addr) => {
       const address = addr.address.toLowerCase();
 
       // Filter out link-local addresses.
