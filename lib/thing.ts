@@ -2,7 +2,7 @@
  * High-level Thing base class implementation.
  */
 
-import Ajv = require('ajv');
+import Ajv from 'ajv';
 import Property = require('./property');
 import Event = require('./event');
 import Action = require('./action');
@@ -461,7 +461,20 @@ class Thing {
     const actionType = this.availableActions[actionName];
 
     if (actionType.metadata.hasOwnProperty('input')) {
-      const valid = ajv.validate(actionType.metadata.input!, input);
+      const schema = JSON.parse(JSON.stringify(actionType.metadata.input));
+
+      if (schema.hasOwnProperty('properties')) {
+        const props: { [propertyName: string]: any }[] =
+          Object.values(schema.properties);
+
+        for (const prop of props) {
+          delete prop.title;
+          delete prop.unit;
+          delete prop['@type'];
+        }
+      }
+
+      const valid = ajv.validate(schema, input);
       if (!valid) {
         return;
       }

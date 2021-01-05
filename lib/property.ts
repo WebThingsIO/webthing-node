@@ -2,7 +2,7 @@
  * High-level Property base class implementation.
  */
 
-import Ajv = require('ajv');
+import Ajv, {ValidateFunction} from 'ajv';
 import Thing = require('./thing');
 import Value = require('./value');
 import {PrimitiveJsonType, Link} from './types';
@@ -27,6 +27,8 @@ class Property<ValueType = any> {
 
   private hrefPrefix: string;
 
+  private validate: ValidateFunction;
+
   /**
    * Initialize the object.
    *
@@ -45,7 +47,12 @@ class Property<ValueType = any> {
     this.value = value;
     this.hrefPrefix = '';
     this.href = `/properties/${this.name}`;
-    this.metadata = metadata || {};
+    this.metadata = JSON.parse(JSON.stringify(metadata || {}));
+
+    delete metadata.title;
+    delete metadata.unit;
+    delete metadata['@type'];
+    this.validate = ajv.compile(metadata);
 
     // Add the property change observer to notify the Thing about a property
     // change.
@@ -63,7 +70,7 @@ class Property<ValueType = any> {
       throw new Error('Read-only property');
     }
 
-    const valid = ajv.validate(this.metadata, value);
+    const valid = this.validate(value);
     if (!valid) {
       throw new Error('Invalid property value');
     }

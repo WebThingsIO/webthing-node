@@ -654,11 +654,13 @@ export class WebThingServer {
 
   name: string;
 
-  port: number|null;
+  port: number;
 
   hostname: string|null;
 
   basePath: string;
+
+  disableHostValidation: boolean;
 
   hosts: string[];
 
@@ -685,6 +687,9 @@ export class WebThingServer {
    * @param {Object[]} additionalRoutes List of additional routes to add to
    *                                    server, i.e. [{path: '..', handler: ..}]
    * @param {String} basePath Base URL path to use, rather than '/'
+   * @param {Boolean} disableHostValidation Whether or not to disable host
+   *                                        validation -- note that this can
+   *                                        lead to DNS rebinding attacks
    */
   constructor(
     things: SingleThing|MultipleThings,
@@ -692,13 +697,15 @@ export class WebThingServer {
     hostname: string|null = null,
     sslOptions: https.ServerOptions|null = null,
     additionalRoutes: any[]|null = null,
-    basePath = '/'
+    basePath = '/',
+    disableHostValidation = false
   ) {
     this.things = things;
     this.name = things.getName();
     this.port = Number(port) || (sslOptions ? 443 : 80);
     this.hostname = hostname;
     this.basePath = basePath.replace(/\/$/, '');
+    this.disableHostValidation = !!disableHostValidation;
 
     const systemHostname = os.hostname().toLowerCase();
     this.hosts = [
@@ -733,7 +740,8 @@ export class WebThingServer {
     // Validate Host header
     this.app.use((request, response, next: () => unknown) => {
       const host = request.headers.host;
-      if (!host || this.hosts.includes(host.toLowerCase())) {
+      if (this.disableHostValidation ||
+          (host && this.hosts.includes(host.toLowerCase()))) {
         next();
       } else {
         response.status(403).send('Forbidden');
