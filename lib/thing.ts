@@ -68,7 +68,7 @@ class Thing {
 
     this.id = id;
     this.title = title;
-    this.context = 'https://iot.mozilla.org/schemas';
+    this.context = 'https://webthings.io/schemas';
     this.type = type || [];
     this.description = description || '';
     this.properties = {};
