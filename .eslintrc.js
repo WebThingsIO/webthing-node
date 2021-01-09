@@ -8,15 +8,18 @@ module.exports = {
     'mocha': true,
     'node': true
   },
-  'extends': ['eslint:recommended',
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+  'extends': [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
   'parser': '@typescript-eslint/parser',
   'parserOptions': {
     'sourceType': 'module'
   },
-  "plugins": ["@typescript-eslint"],
+  'plugins': [
+    '@typescript-eslint'
+  ],
   'rules': {
     'arrow-parens': [
       'error',
@@ -51,7 +54,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': [
       'warn',
       {
-        allowArgumentsExplicitlyTypedAsAny: true
+        'allowArgumentsExplicitlyTypedAsAny': true
       }
     ],
     '@typescript-eslint/func-call-spacing': [
@@ -105,7 +108,7 @@ module.exports = {
     ],
     'max-len': [
       'error',
-      80
+      100
     ],
     'multiline-ternary': [
       'error',
@@ -129,7 +132,7 @@ module.exports = {
     '@typescript-eslint/no-namespace': [
       'error',
       {
-        allowDeclarations: true
+        'allowDeclarations': true
       }
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
@@ -263,7 +266,9 @@ module.exports = {
   },
   'overrides': [
     {
-      'files': ['example/**/*.js'],
+      'files': [
+        'example/**/*.js'
+      ],
       'rules': {
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-this-alias': 'off',
