@@ -28,16 +28,16 @@ class Thing {
 
   private availableActions: {
     [actionName: string]: {
-      metadata: Action.ActionMetadata,
-      class: Action.ActionTypeClass,
-    }
+      metadata: Action.ActionMetadata;
+      class: Action.ActionTypeClass;
+    };
   };
 
   private availableEvents: {
     [name: string]: {
-      metadata: Event.EventMetadata,
-      subscribers: Set<Subscriber>,
-    }
+      metadata: Event.EventMetadata;
+      subscribers: Set<Subscriber>;
+    };
   };
 
   private actions: {[name: string]: Action[]};
@@ -653,10 +653,10 @@ class Thing {
 declare namespace Thing {
   export interface SecurityScheme {
     '@type'?: string|string[];
-    scheme: string
-    description?: string
-    descriptions?: {[lang: string]: string}
-    proxy?: string
+    scheme: string;
+    description?: string;
+    descriptions?: {[lang: string]: string};
+    proxy?: string;
   }
 
   export interface ThingDescription {
@@ -671,9 +671,9 @@ declare namespace Thing {
     actions: {[name: string]: Action.ActionMetadata};
     events: {[name: string]: Event.EventMetadata};
     description?: string;
-    base?: string
-    securityDefinitions?: {[security: string]: SecurityScheme}
-    security?: string
+    base?: string;
+    securityDefinitions?: {[security: string]: SecurityScheme};
+    security?: string;
   }
 }
 

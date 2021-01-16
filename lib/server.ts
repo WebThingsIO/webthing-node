@@ -221,8 +221,8 @@ class ThingHandler extends BaseHandler {
 
     ws.on('message', (msg) => {
       let message: {
-        messageType: string,
-        data: {[name: string]: any},
+        messageType: string;
+        data: {[name: string]: any};
       };
       try {
         message = JSON.parse(msg as string);
