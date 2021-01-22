@@ -49,12 +49,19 @@ module.exports = {
       'never'
     ],
     'curly': 'error',
+    '@typescript-eslint/default-param-last': 'error',
     'dot-notation': 'error',
     'eol-last': 'error',
     '@typescript-eslint/explicit-module-boundary-types': [
       'warn',
       {
         'allowArgumentsExplicitlyTypedAsAny': true
+      }
+    ],
+    '@typescript-eslint/explicit-function-return-type': [
+      'error',
+      {
+        'allowExpressions': true
       }
     ],
     '@typescript-eslint/func-call-spacing': [
@@ -156,6 +163,7 @@ module.exports = {
     'no-sequences': 'error',
     'no-shadow-restricted-names': 'error',
     'no-tabs': 'error',
+    'no-throw-literal': 'error',
     'no-trailing-spaces': 'error',
     'no-undefined': 'error',
     'no-unmodified-loop-condition': 'error',
@@ -200,6 +208,7 @@ module.exports = {
       }
     ],
     'prefer-const': 'error',
+    '@typescript-eslint/prefer-for-of': 'error',
     'prefer-template': 'error',
     'quote-props': [
       'error',
@@ -243,7 +252,7 @@ module.exports = {
       'error',
       'never'
     ],
-    'space-infix-ops': 'error',
+    '@typescript-eslint/space-infix-ops': 'error',
     'space-unary-ops': [
       'error',
       {
