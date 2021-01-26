@@ -5,7 +5,7 @@
 import Ajv, {ValidateFunction} from 'ajv';
 import Thing = require('./thing');
 import Value = require('./value');
-import {PrimitiveJsonType, Link} from './types';
+import {AnyType, PrimitiveJsonType, Link} from './types';
 
 const ajv = new Ajv();
 
@@ -13,7 +13,7 @@ const ajv = new Ajv();
 /**
  * A Property represents an individual state value of a thing.
  */
-class Property<ValueType = any> {
+class Property<ValueType = AnyType> {
 
   private thing: Thing;
 
@@ -56,7 +56,7 @@ class Property<ValueType = any> {
 
     // Add the property change observer to notify the Thing about a property
     // change.
-    this.value.on('update', () => this.thing.propertyNotify(this));
+    this.value.on('update', () => this.thing.propertyNotify(<Property<AnyType>><unknown> this));
   }
 
   /**
@@ -65,7 +65,7 @@ class Property<ValueType = any> {
    * @param {*} value - New value
    * @throws Error if the property is readonly or is invalid
    */
-  validateValue(value: any): asserts value is ValueType {
+  validateValue(value: ValueType): void {
     if (this.metadata.hasOwnProperty('readOnly') && this.metadata.readOnly) {
       throw new Error('Read-only property');
     }
@@ -172,7 +172,7 @@ declare namespace Property {
     title?: string;
     description?: string;
     links?: Link[];
-    enum?: any[];
+    enum?: AnyType[];
     readOnly?: boolean;
     minimum?: number;
     maximum?: number;

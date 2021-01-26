@@ -3,13 +3,13 @@
  */
 
 import * as utils from './utils';
-import {Link, PrimitiveJsonType} from './types';
+import {AnyType, Link, PrimitiveJsonType} from './types';
 import Thing = require('./thing');
 
 /**
  * An Action represents an individual action on a thing.
  */
-class Action<InputType = any> {
+class Action<InputType = AnyType> {
 
   private id: string;
 
@@ -64,7 +64,7 @@ class Action<InputType = any> {
     };
 
     if (this.input !== null) {
-      description[this.name].input = this.input;
+      description[this.name].input = <AnyType><unknown> this.input;
     }
 
     if (this.timeCompleted !== null) {
@@ -160,7 +160,7 @@ class Action<InputType = any> {
    */
   start(): void {
     this.status = 'pending';
-    this.thing.actionNotify(this);
+    this.thing.actionNotify(<Action<AnyType>><unknown> this);
     this.performAction().then(() => this.finish(), () => this.finish());
   }
 
@@ -188,7 +188,7 @@ class Action<InputType = any> {
   finish(): void {
     this.status = 'completed';
     this.timeCompleted = utils.timestamp();
-    this.thing.actionNotify(this);
+    this.thing.actionNotify(<Action<AnyType>><unknown> this);
   }
 }
 
@@ -207,7 +207,7 @@ declare namespace Action {
     };
   }
 
-  interface ActionDescription<InputType = any> {
+  interface ActionDescription<InputType = AnyType> {
     [name: string]: {
       href: string;
       timeRequested: string;
@@ -217,7 +217,7 @@ declare namespace Action {
     };
   }
 
-  export interface ActionTypeClass<InputType = any> {
+  export interface ActionTypeClass<InputType = AnyType> {
     // eslint-disable-next-line @typescript-eslint/no-misused-new
     new (thing: Thing, input: InputType): Action<InputType>;
   }

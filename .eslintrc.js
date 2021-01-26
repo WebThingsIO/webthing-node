@@ -137,7 +137,12 @@ module.exports = {
     'no-console': 0,
     '@typescript-eslint/no-duplicate-imports': 'error',
     'no-eval': 'error',
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': [
+      'error',
+      {
+        'ignoreRestArgs': true
+      }
+    ],
     'no-floating-decimal': 'error',
     'no-implicit-globals': 'error',
     'no-implied-eval': 'error',

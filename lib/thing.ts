@@ -6,7 +6,7 @@ import Ajv from 'ajv';
 import Property = require('./property');
 import Event = require('./event');
 import Action = require('./action');
-import {Link, Subscriber} from './types';
+import {AnyType, Link, Subscriber} from './types';
 
 const ajv = new Ajv();
 
@@ -342,7 +342,7 @@ class Thing {
    *
    * @returns {*} Current property value if found, else null
    */
-  getProperty(propertyName: string): any|null {
+  getProperty(propertyName: string): unknown|null {
     const prop = this.findProperty(propertyName);
     if (prop) {
       return prop.getValue();
@@ -356,8 +356,8 @@ class Thing {
    *
    * Returns an object of propertyName -> value.
    */
-  getProperties(): { [propertyName: string]: any } {
-    const props: { [propertyName: string]: any } = {};
+  getProperties(): Record<string, unknown> {
+    const props: Record<string, unknown> = {};
     for (const name in this.properties) {
       props[name] = this.properties[name].getValue();
     }
@@ -382,7 +382,7 @@ class Thing {
    * @param {String} propertyName Name of the property to set
    * @param {*} value Value to set
    */
-  setProperty(propertyName: string, value: any): void {
+  setProperty(propertyName: string, value: AnyType): void {
     const prop = this.findProperty(propertyName);
     if (!prop) {
       return;
@@ -448,7 +448,7 @@ class Thing {
    * @param {Object} input Any action inputs
    * @returns {Object} The action that was created.
    */
-  performAction<InputType = any>(
+  performAction<InputType = AnyType>(
     actionName: string,
     input: InputType | null
   ): Action<InputType>|undefined {
@@ -464,7 +464,7 @@ class Thing {
       const schema = JSON.parse(JSON.stringify(actionType.metadata.input));
 
       if (schema.hasOwnProperty('properties')) {
-        const props: { [propertyName: string]: any }[] =
+        const props: Record<string, unknown>[] =
           Object.values(schema.properties);
 
         for (const prop of props) {
@@ -480,10 +480,11 @@ class Thing {
       }
     }
 
-    const action: Action<InputType> = new actionType.class(this, input);
+    const action: Action<InputType> =
+      <Action<InputType>>(new actionType.class(this, <AnyType><unknown>input));
     action.setHrefPrefix(this.hrefPrefix);
-    this.actionNotify(action);
-    this.actions[actionName].push(action);
+    this.actionNotify(<Action<AnyType>><unknown>action);
+    this.actions[actionName].push(<Action<AnyType>><unknown>action);
     return action;
   }
 
@@ -586,7 +587,7 @@ class Thing {
    *
    * @param {Object} property The property that changed
    */
-  propertyNotify(property: Property): void {
+  propertyNotify(property: Property<AnyType>): void {
     const message = JSON.stringify({
       messageType: 'propertyStatus',
       data: {

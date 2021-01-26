@@ -2,15 +2,16 @@
  * Node Web Thing server implementation.
  */
 
-import bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 import * as dnssd from 'dnssd';
-import express = require('express');
-import expressWs = require('express-ws');
+import express from 'express';
+import expressWs from 'express-ws';
 import * as http from 'http';
 import * as https from 'https';
 import * as os from 'os';
 import * as utils from './utils';
-import Thing = require('./thing');
+import Thing from './thing';
+import {AnyType} from './types';
 
 /**
  * A container for a single thing.
@@ -222,7 +223,7 @@ class ThingHandler extends BaseHandler {
     ws.on('message', (msg) => {
       let message: {
         messageType: string;
-        data: {[name: string]: any};
+        data: Record<string, unknown>;
       };
       try {
         message = JSON.parse(msg as string);
@@ -264,7 +265,7 @@ class ThingHandler extends BaseHandler {
         case 'setProperty': {
           for (const propertyName in message.data) {
             try {
-              thing.setProperty(propertyName, message.data[propertyName]);
+              thing.setProperty(propertyName, <AnyType>message.data[propertyName]);
             } catch (e) {
               ws.send(JSON.stringify({
                 messageType: 'error',
@@ -281,8 +282,9 @@ class ThingHandler extends BaseHandler {
         case 'requestAction': {
           for (const actionName in message.data) {
             let input = null;
-            if (message.data[actionName].hasOwnProperty('input')) {
-              input = message.data[actionName].input;
+            const actionData = <Record<string, unknown>>message.data[actionName];
+            if (actionData.hasOwnProperty('input')) {
+              input = actionData.input;
             }
 
             const action = thing.performAction(actionName, input);
@@ -696,7 +698,7 @@ export class WebThingServer {
     port: number|null = null,
     hostname: string|null = null,
     sslOptions: https.ServerOptions|null = null,
-    additionalRoutes: any[]|null = null,
+    additionalRoutes: Record<string, express.RequestHandler>[]|null = null,
     basePath = '/',
     disableHostValidation = false
   ) {

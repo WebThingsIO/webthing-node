@@ -3,6 +3,7 @@
  */
 
 import {EventEmitter} from 'events';
+import {AnyType} from './types';
 
 /**
  * A property value.
@@ -14,7 +15,7 @@ import {EventEmitter} from 'events';
  * update (command to turn the light off) or if the underlying sensor reports a
  * new value.
  */
-class Value<ValueType = any> extends EventEmitter {
+class Value<ValueType = AnyType> extends EventEmitter {
 
   private lastValue: ValueType;
 

@@ -4,12 +4,12 @@
 
 import Thing = require('./thing');
 import * as utils from './utils';
-import {PrimitiveJsonType, Link} from './types';
+import {AnyType, PrimitiveJsonType, Link} from './types';
 
 /**
  * An Event represents an individual event from a thing.
  */
-class Event<Data = any> {
+class Event<Data = AnyType> {
   private thing: Thing;
 
   private name: string;
@@ -45,7 +45,7 @@ class Event<Data = any> {
     };
 
     if (this.data !== null) {
-      description[this.name].data = this.data;
+      description[this.name].data = <AnyType><unknown> this.data;
     }
 
     return description;
@@ -93,7 +93,7 @@ declare namespace Event {
   interface EventDescription {
     [name: string]: {
       timestamp: string;
-      data?: any;
+      data?: AnyType;
     };
   }
 
