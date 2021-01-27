@@ -1,3 +1,1 @@
-import webthing = require('./webthing');
-
-export = webthing;
+export * from './webthing';

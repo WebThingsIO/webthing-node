@@ -2,7 +2,7 @@
  * High-level Event base class implementation.
  */
 
-import Thing = require('./thing');
+import Thing from './thing';
 import * as utils from './utils';
 import {AnyType, PrimitiveJsonType, Link} from './types';
 

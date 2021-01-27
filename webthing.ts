@@ -1,8 +1,8 @@
-import Action = require('./lib/action');
-import Event = require('./lib/event');
-import Property = require('./lib/property');
-import Thing = require('./lib/thing');
-import Value = require('./lib/value');
+import Action from './lib/action';
+import Event from './lib/event';
+import Property from './lib/property';
+import Thing from './lib/thing';
+import Value from './lib/value';
 
 export {
   Action,

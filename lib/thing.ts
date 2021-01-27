@@ -3,9 +3,9 @@
  */
 
 import Ajv from 'ajv';
-import Property = require('./property');
-import Event = require('./event');
-import Action = require('./action');
+import Property from './property';
+import Event from './event';
+import Action from './action';
 import {AnyType, Link, Subscriber} from './types';
 
 const ajv = new Ajv();

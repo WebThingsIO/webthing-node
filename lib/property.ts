@@ -3,8 +3,8 @@
  */
 
 import Ajv, {ValidateFunction} from 'ajv';
-import Thing = require('./thing');
-import Value = require('./value');
+import Thing from './thing';
+import Value from './value';
 import {AnyType, PrimitiveJsonType, Link} from './types';
 
 const ajv = new Ajv();

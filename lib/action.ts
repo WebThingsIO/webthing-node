@@ -4,7 +4,7 @@
 
 import * as utils from './utils';
 import {AnyType, Link, PrimitiveJsonType} from './types';
-import Thing = require('./thing');
+import Thing from './thing';
 
 /**
  * An Action represents an individual action on a thing.
