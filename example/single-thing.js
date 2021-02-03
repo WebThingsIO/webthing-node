@@ -1,16 +1,8 @@
 // -*- mode: js; js-indent-level:2;  -*-
 // SPDX-License-Identifier: MPL-2.0
 
-const {
-  Action,
-  Event,
-  Property,
-  SingleThing,
-  Thing,
-  Value,
-  WebThingServer,
-} = require('webthing');
-const {v4: uuidv4} = require('uuid');
+const { Action, Event, Property, SingleThing, Thing, Value, WebThingServer } = require('webthing');
+const { v4: uuidv4 } = require('uuid');
 
 class OverheatedEvent extends Event {
   constructor(thing, data) {
@@ -35,34 +27,32 @@ class FadeAction extends Action {
 }
 
 function makeThing() {
-  const thing = new Thing('urn:dev:ops:my-lamp-1234',
-                          'My Lamp',
-                          ['OnOffSwitch', 'Light'],
-                          'A web connected lamp');
+  const thing = new Thing(
+    'urn:dev:ops:my-lamp-1234',
+    'My Lamp',
+    ['OnOffSwitch', 'Light'],
+    'A web connected lamp'
+  );
 
   thing.addProperty(
-    new Property(thing,
-                 'on',
-                 new Value(true),
-                 {
-                   '@type': 'OnOffProperty',
-                   title: 'On/Off',
-                   type: 'boolean',
-                   description: 'Whether the lamp is turned on',
-                 }));
+    new Property(thing, 'on', new Value(true), {
+      '@type': 'OnOffProperty',
+      title: 'On/Off',
+      type: 'boolean',
+      description: 'Whether the lamp is turned on',
+    })
+  );
   thing.addProperty(
-    new Property(thing,
-                 'brightness',
-                 new Value(50),
-                 {
-                   '@type': 'BrightnessProperty',
-                   title: 'Brightness',
-                   type: 'integer',
-                   description: 'The level of light from 0-100',
-                   minimum: 0,
-                   maximum: 100,
-                   unit: 'percent',
-                 }));
+    new Property(thing, 'brightness', new Value(50), {
+      '@type': 'BrightnessProperty',
+      title: 'Brightness',
+      type: 'integer',
+      description: 'The level of light from 0-100',
+      minimum: 0,
+      maximum: 100,
+      unit: 'percent',
+    })
+  );
 
   thing.addAvailableAction(
     'fade',
@@ -71,10 +61,7 @@ function makeThing() {
       description: 'Fade the lamp to a given level',
       input: {
         type: 'object',
-        required: [
-          'brightness',
-          'duration',
-        ],
+        required: ['brightness', 'duration'],
         properties: {
           brightness: {
             type: 'integer',
@@ -90,15 +77,14 @@ function makeThing() {
         },
       },
     },
-    FadeAction);
+    FadeAction
+  );
 
-  thing.addAvailableEvent(
-    'overheated',
-    {
-      description: 'The lamp has exceeded its safe operating temperature',
-      type: 'number',
-      unit: 'degree celsius',
-    });
+  thing.addAvailableEvent('overheated', {
+    description: 'The lamp has exceeded its safe operating temperature',
+    type: 'number',
+    unit: 'degree celsius',
+  });
 
   return thing;
 }
@@ -111,7 +97,10 @@ function runServer() {
   const server = new WebThingServer(new SingleThing(thing), 8888);
 
   process.on('SIGINT', () => {
-    server.stop().then(() => process.exit()).catch(() => process.exit());
+    server
+      .stop()
+      .then(() => process.exit())
+      .catch(() => process.exit());
   });
 
   server.start().catch(console.error);

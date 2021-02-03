@@ -6,7 +6,7 @@ import Ajv from 'ajv';
 import Property from './property';
 import Event from './event';
 import Action from './action';
-import {AnyType, Link, Subscriber} from './types';
+import { AnyType, Link, Subscriber } from './types';
 
 const ajv = new Ajv();
 
@@ -24,7 +24,7 @@ class Thing {
 
   private description: string;
 
-  private properties: {[name: string]: Property};
+  private properties: { [name: string]: Property };
 
   private availableActions: {
     [actionName: string]: {
@@ -40,7 +40,7 @@ class Thing {
     };
   };
 
-  private actions: {[name: string]: Action[]};
+  private actions: { [name: string]: Action[] };
 
   private events: Event[];
 
@@ -48,7 +48,7 @@ class Thing {
 
   private hrefPrefix: string;
 
-  private uiHref: string|null;
+  private uiHref: string | null;
 
   /**
    * Initialize the object.
@@ -58,10 +58,7 @@ class Thing {
    * @param {String} type (Optional) The thing's type(s)
    * @param {String} description (Optional) Description of the thing
    */
-  constructor(id: string,
-              title: string,
-              type: string|string[],
-              description: string) {
+  constructor(id: string, title: string, type: string | string[], description: string) {
     if (!Array.isArray(type)) {
       type = [type];
     }
@@ -87,7 +84,7 @@ class Thing {
    * @returns {Object} Current thing state
    */
   asThingDescription(): Thing.ThingDescription {
-    const thing: Omit<Thing.ThingDescription, 'name'|'href'> = {
+    const thing: Omit<Thing.ThingDescription, 'name' | 'href'> = {
       id: this.id,
       title: this.title,
       '@context': this.context,
@@ -164,7 +161,7 @@ class Thing {
    *
    * @returns {String|null} The href.
    */
-  getUiHref(): string|null {
+  getUiHref(): string | null {
     return this.uiHref;
   }
 
@@ -246,8 +243,8 @@ class Thing {
    *
    * @returns {Object} Properties, i.e. name -> description
    */
-  getPropertyDescriptions(): {[name: string]: Property.PropertyDescription} {
-    const descriptions: {[name: string]: Property.PropertyDescription} = {};
+  getPropertyDescriptions(): { [name: string]: Property.PropertyDescription } {
+    const descriptions: { [name: string]: Property.PropertyDescription } = {};
     for (const name in this.properties) {
       descriptions[name] = this.properties[name].asPropertyDescription();
     }
@@ -262,9 +259,7 @@ class Thing {
    *
    * @returns {Object} Action descriptions.
    */
-  getActionDescriptions(
-    actionName?: string|null
-  ): Action.ActionDescription[] {
+  getActionDescriptions(actionName?: string | null): Action.ActionDescription[] {
     const descriptions: Action.ActionDescription[] = [];
 
     if (!actionName) {
@@ -289,13 +284,13 @@ class Thing {
    *
    * @returns {Object} Event descriptions.
    */
-  getEventDescriptions(eventName?: string|null): Event.EventDescription[] {
+  getEventDescriptions(eventName?: string | null): Event.EventDescription[] {
     if (!eventName) {
       return this.events.map((e) => e.asEventDescription());
     } else {
-      return this.events.
-        filter((e) => e.getName() === eventName).
-        map((e) => e.asEventDescription());
+      return this.events
+        .filter((e) => e.getName() === eventName)
+        .map((e) => e.asEventDescription());
     }
   }
 
@@ -327,7 +322,7 @@ class Thing {
    *
    * @returns {(Object|null)} Property if found, else null
    */
-  findProperty(propertyName: string): Property|null {
+  findProperty(propertyName: string): Property | null {
     if (this.properties.hasOwnProperty(propertyName)) {
       return this.properties[propertyName];
     }
@@ -342,7 +337,7 @@ class Thing {
    *
    * @returns {*} Current property value if found, else null
    */
-  getProperty(propertyName: string): unknown|null {
+  getProperty(propertyName: string): unknown | null {
     const prop = this.findProperty(propertyName);
     if (prop) {
       return prop.getValue();
@@ -398,7 +393,7 @@ class Thing {
    * @param {String} actionId ID of the action
    * @returns {Object} The requested action if found, else null
    */
-  getAction(actionName: string, actionId: string): Action|null {
+  getAction(actionName: string, actionId: string): Action | null {
     if (!this.actions.hasOwnProperty(actionName)) {
       return null;
     }
@@ -411,7 +406,6 @@ class Thing {
 
     return null;
   }
-
 
   /**
    * Add a new event and notify subscribers.
@@ -451,7 +445,7 @@ class Thing {
   performAction<InputType = AnyType>(
     actionName: string,
     input: InputType | null
-  ): Action<InputType>|undefined {
+  ): Action<InputType> | undefined {
     input = input || null;
 
     if (!this.availableActions.hasOwnProperty(actionName)) {
@@ -464,8 +458,7 @@ class Thing {
       const schema = JSON.parse(JSON.stringify(actionType.metadata.input));
 
       if (schema.hasOwnProperty('properties')) {
-        const props: Record<string, unknown>[] =
-          Object.values(schema.properties);
+        const props: Record<string, unknown>[] = Object.values(schema.properties);
 
         for (const prop of props) {
           delete prop.title;
@@ -480,11 +473,12 @@ class Thing {
       }
     }
 
-    const action: Action<InputType> =
-      <Action<InputType>>(new actionType.class(this, <AnyType><unknown>input));
+    const action: Action<InputType> = <Action<InputType>>(
+      new actionType.class(this, <AnyType>(<unknown>input))
+    );
     action.setHrefPrefix(this.hrefPrefix);
-    this.actionNotify(<Action<AnyType>><unknown>action);
-    this.actions[actionName].push(<Action<AnyType>><unknown>action);
+    this.actionNotify(<Action<AnyType>>(<unknown>action));
+    this.actions[actionName].push(<Action<AnyType>>(<unknown>action));
     return action;
   }
 
@@ -520,9 +514,11 @@ class Thing {
    *                          an object.
    * @param {Object} cls Class to instantiate for this action
    */
-  addAvailableAction(name: string,
-                     metadata: Action.ActionMetadata|null,
-                     cls: Action.ActionTypeClass): void {
+  addAvailableAction(
+    name: string,
+    metadata: Action.ActionMetadata | null,
+    cls: Action.ActionTypeClass
+  ): void {
     if (!metadata) {
       metadata = {};
     }
@@ -576,8 +572,10 @@ class Thing {
    * @param {Object} ws The websocket
    */
   removeEventSubscriber(name: string, ws: Subscriber): void {
-    if (this.availableEvents.hasOwnProperty(name) &&
-        this.availableEvents[name].subscribers.has(ws)) {
+    if (
+      this.availableEvents.hasOwnProperty(name) &&
+      this.availableEvents[name].subscribers.has(ws)
+    ) {
       this.availableEvents[name].subscribers.delete(ws);
     }
   }
@@ -639,8 +637,7 @@ class Thing {
       data: event.asEventDescription(),
     });
 
-    for (const subscriber of
-      this.availableEvents[event.getName()].subscribers) {
+    for (const subscriber of this.availableEvents[event.getName()].subscribers) {
       try {
         subscriber.send(message);
       } catch (e) {
@@ -653,10 +650,10 @@ class Thing {
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Thing {
   export interface SecurityScheme {
-    '@type'?: string|string[];
+    '@type'?: string | string[];
     scheme: string;
     description?: string;
-    descriptions?: {[lang: string]: string};
+    descriptions?: { [lang: string]: string };
     proxy?: string;
   }
 
@@ -669,11 +666,11 @@ declare namespace Thing {
     '@type': string[];
     properties: { [name: string]: Property.PropertyDescription };
     links: Link[];
-    actions: {[name: string]: Action.ActionMetadata};
-    events: {[name: string]: Event.EventMetadata};
+    actions: { [name: string]: Action.ActionMetadata };
+    events: { [name: string]: Event.EventMetadata };
     description?: string;
     base?: string;
-    securityDefinitions?: {[security: string]: SecurityScheme};
+    securityDefinitions?: { [security: string]: SecurityScheme };
     security?: string;
   }
 }

@@ -2,19 +2,17 @@
  * High-level Property base class implementation.
  */
 
-import Ajv, {ValidateFunction} from 'ajv';
+import Ajv, { ValidateFunction } from 'ajv';
 import Thing from './thing';
 import Value from './value';
-import {AnyType, PrimitiveJsonType, Link} from './types';
+import { AnyType, PrimitiveJsonType, Link } from './types';
 
 const ajv = new Ajv();
-
 
 /**
  * A Property represents an individual state value of a thing.
  */
 class Property<ValueType = AnyType> {
-
   private thing: Thing;
 
   private name: string;
@@ -38,10 +36,12 @@ class Property<ValueType = AnyType> {
    * @param {Object} metadata Property metadata, i.e. type, description, unit,
    *                          etc., as an object.
    */
-  constructor(thing: Thing,
-              name: string,
-              value: Value<ValueType>,
-              metadata: Property.PropertyMetadata) {
+  constructor(
+    thing: Thing,
+    name: string,
+    value: Value<ValueType>,
+    metadata: Property.PropertyMetadata
+  ) {
     this.thing = thing;
     this.name = name;
     this.value = value;
@@ -56,7 +56,7 @@ class Property<ValueType = AnyType> {
 
     // Add the property change observer to notify the Thing about a property
     // change.
-    this.value.on('update', () => this.thing.propertyNotify(<Property<AnyType>><unknown> this));
+    this.value.on('update', () => this.thing.propertyNotify(<Property<AnyType>>(<unknown>this)));
   }
 
   /**
@@ -88,12 +88,10 @@ class Property<ValueType = AnyType> {
       description.links = [];
     }
 
-    description.links.push(
-      {
-        rel: 'property',
-        href: this.hrefPrefix + this.href,
-      }
-    );
+    description.links.push({
+      rel: 'property',
+      href: this.hrefPrefix + this.href,
+    });
     return description;
   }
 

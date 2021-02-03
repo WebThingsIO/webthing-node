@@ -10,18 +10,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.*
  */
 
-const {
-  Thing,
-} = require('webthing');
+const { Thing } = require('webthing');
 
 const PwmProperty = require('../pwm/pwm-property');
 
 class EdisonThing extends Thing {
   constructor(name, type, description) {
-    super('urn:dev:ops:my-edison-1234',
-          name || 'Edison',
-          type || [],
-          description || 'A web connected Edison');
+    super(
+      'urn:dev:ops:my-edison-1234',
+      name || 'Edison',
+      type || [],
+      description || 'A web connected Edison'
+    );
     const self = this;
     this.pinProperties = [
       new PwmProperty(this, 'PWM0', 50, {
@@ -40,7 +40,7 @@ class EdisonThing extends Thing {
   }
 }
 
-module.exports = function() {
+module.exports = function () {
   if (!module.exports.instance) {
     module.exports.instance = new EdisonThing();
   }

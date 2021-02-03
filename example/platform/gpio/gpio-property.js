@@ -13,43 +13,39 @@
 const console = require('console');
 
 // Disable logs here by editing to '!console.log'
-const log = console.log || function() {};
+const log = console.log || function () {};
 
-const {
-  Property,
-  Value,
-} = require('webthing');
+const { Property, Value } = require('webthing');
 
 const gpio = require('gpio');
 
 class GpioOutProperty extends Property {
   constructor(thing, name, value, metadata, config) {
-    super(thing, name, new Value(Boolean(value)),
-          {
-            '@type': 'OnOffProperty',
-            title: (metadata && metadata.title) || `On/Off: ${name}`,
-            type: 'boolean',
-            description: (metadata && metadata.description) ||
-              (`GPIO Actuator on pin=${config.pin}`),
-          });
+    super(thing, name, new Value(Boolean(value)), {
+      '@type': 'OnOffProperty',
+      title: (metadata && metadata.title) || `On/Off: ${name}`,
+      type: 'boolean',
+      description: (metadata && metadata.description) || `GPIO Actuator on pin=${config.pin}`,
+    });
     const self = this;
     this.config = config;
-    this.port = gpio.export(config.pin,
-                            {direction: 'out',
-                             ready: () => {
-                               log(`log: GPIO: ${self.getName()}: open:`);
-                               self.value.valueForwarder = (value) => {
-                                 try {
-                                   log(`log: GPIO: ${self.getName()}: \
+    this.port = gpio.export(config.pin, {
+      direction: 'out',
+      ready: () => {
+        log(`log: GPIO: ${self.getName()}: open:`);
+        self.value.valueForwarder = (value) => {
+          try {
+            log(`log: GPIO: ${self.getName()}: \
 writing: ${value}`);
-                                   self.port.set(value);
-                                 } catch (err) {
-                                   console.error(`error: GPIO: 
+            self.port.set(value);
+          } catch (err) {
+            console.error(`error: GPIO: 
 ${self.getName()}: Fail to write: ${err}`);
-                                   return err;
-                                 }
-                               };
-                             }});
+            return err;
+          }
+        };
+      },
+    });
   }
 
   close() {
@@ -65,16 +61,13 @@ ${self.getName()}: Fail to write: ${err}`);
 
 class GpioInProperty extends Property {
   constructor(thing, name, value, metadata, config) {
-    super(thing, name, new Value(Boolean(value)),
-          {
-            '@type': 'BooleanProperty',
-            title: (metadata && metadata.title) || `On/Off: ${name}`,
-            type: 'boolean',
-            readOnly: true,
-            description:
-            (metadata && metadata.description) ||
-              (`GPIO Sensor on pin=${config.pin}`),
-          });
+    super(thing, name, new Value(Boolean(value)), {
+      '@type': 'BooleanProperty',
+      title: (metadata && metadata.title) || `On/Off: ${name}`,
+      type: 'boolean',
+      readOnly: true,
+      description: (metadata && metadata.description) || `GPIO Sensor on pin=${config.pin}`,
+    });
     const self = this;
     this.config = config;
     const callback = () => {
@@ -85,8 +78,7 @@ class GpioInProperty extends Property {
         self.value.notifyOfExternalUpdate(value);
       });
     };
-    this.port = gpio.export(config.pin,
-                            {direction: 'in', ready: callback});
+    this.port = gpio.export(config.pin, { direction: 'in', ready: callback });
   }
 
   close() {

@@ -13,31 +13,25 @@
 const console = require('console');
 
 // Disable logs here by editing to '!console.log'
-const log = console.log || function() {};
-const verbose = !console.log || function() {};
+const log = console.log || function () {};
+const verbose = !console.log || function () {};
 
-const {
-  Property,
-  Value,
-} = require('webthing');
+const { Property, Value } = require('webthing');
 
 const adc = require('../adc');
 
 class AdcInProperty extends Property {
   constructor(thing, name, value, metadata, config) {
-    super(thing, name, new Value(Number(value)),
-          {
-            '@type': 'LevelProperty',
-            title: (metadata && metadata.title) || `Level: ${name}`,
-            type: 'number',
-            readOnly: true,
-            description:
-            (metadata && metadata.description) ||
-              (`ADC Sensor on pin=${config.pin}`),
-          });
+    super(thing, name, new Value(Number(value)), {
+      '@type': 'LevelProperty',
+      title: (metadata && metadata.title) || `Level: ${name}`,
+      type: 'number',
+      readOnly: true,
+      description: (metadata && metadata.description) || `ADC Sensor on pin=${config.pin}`,
+    });
     const self = this;
     config.frequency = config.frequency || 1;
-    config.range = config.range || 0xFFF;
+    config.range = config.range || 0xfff;
     this.period = 1000.0 / config.frequency;
     this.config = config;
     this.port = adc.open(config, (err) => {
@@ -50,8 +44,8 @@ class AdcInProperty extends Property {
       self.inverval = setInterval(() => {
         let value = Number(self.port.readSync());
         verbose(`log: ADC:\
- ${self.getName()}: update: 0x${value.toString(0xF)}`);
-        value = Number(Math.floor(100.0 * value / self.config.range));
+ ${self.getName()}: update: 0x${value.toString(0xf)}`);
+        value = Number(Math.floor((100.0 * value) / self.config.range));
         if (value !== self.lastValue) {
           log(`log: ADC: ${self.getName()}: change: ${value}%`);
           self.value.notifyOfExternalUpdate(value);
