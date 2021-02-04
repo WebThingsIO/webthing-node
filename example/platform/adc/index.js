@@ -20,12 +20,9 @@ class Adc {
     return contents;
   }
 
-  closeSync() {
-  }
-
+  closeSync() {}
 }
 
-
-module.exports.open = function(config, callback) {
+module.exports.open = function (config, callback) {
   return new Adc(config, callback);
 };

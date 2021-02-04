@@ -13,12 +13,9 @@
 const console = require('console');
 
 // TODO: disable logs here by editing to '!console.log'
-const log = console.log || function() {};
+const log = console.log || function () {};
 
-const {
-  SingleThing,
-  WebThingServer,
-} = require('webthing');
+const { SingleThing, WebThingServer } = require('webthing');
 
 // Update with different board here if needed
 let board = 'artik530';

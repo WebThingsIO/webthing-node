@@ -26,13 +26,18 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Build project
+      - name: Install dependencies
         run: |
           npm ci
-          npm run build
+      - name: Check formatting
+        run: |
+          npx prettier -c '*.ts' 'lib/*.ts' 'example/**/*.{js,ts}'
       - name: Lint with eslint
         run: |
           npm run lint
+      - name: Transpile ts files
+        run: |
+          npm run build
       - name: Run integration tests
         run: |
           ./test.sh

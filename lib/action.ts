@@ -3,14 +3,13 @@
  */
 
 import * as utils from './utils';
-import {AnyType, Link, PrimitiveJsonType} from './types';
+import { AnyType, Link, PrimitiveJsonType } from './types';
 import Thing from './thing';
 
 /**
  * An Action represents an individual action on a thing.
  */
 class Action<InputType = AnyType> {
-
   private id: string;
 
   private thing: Thing;
@@ -27,7 +26,7 @@ class Action<InputType = AnyType> {
 
   private timeRequested: string;
 
-  private timeCompleted: string|null;
+  private timeCompleted: string | null;
 
   constructor(id: string, thing: Thing, name: string, input: InputType) {
     /**
@@ -64,7 +63,7 @@ class Action<InputType = AnyType> {
     };
 
     if (this.input !== null) {
-      description[this.name].input = <AnyType><unknown> this.input;
+      description[this.name].input = <AnyType>(<unknown>this.input);
     }
 
     if (this.timeCompleted !== null) {
@@ -142,7 +141,7 @@ class Action<InputType = AnyType> {
    *
    * @returns {String} The time.
    */
-  getTimeCompleted(): string|null {
+  getTimeCompleted(): string | null {
     return this.timeCompleted;
   }
 
@@ -160,8 +159,11 @@ class Action<InputType = AnyType> {
    */
   start(): void {
     this.status = 'pending';
-    this.thing.actionNotify(<Action<AnyType>><unknown> this);
-    this.performAction().then(() => this.finish(), () => this.finish());
+    this.thing.actionNotify(<Action<AnyType>>(<unknown>this));
+    this.performAction().then(
+      () => this.finish(),
+      () => this.finish()
+    );
   }
 
   /**
@@ -188,7 +190,7 @@ class Action<InputType = AnyType> {
   finish(): void {
     this.status = 'completed';
     this.timeCompleted = utils.timestamp();
-    this.thing.actionNotify(<Action<AnyType>><unknown> this);
+    this.thing.actionNotify(<Action<AnyType>>(<unknown>this));
   }
 }
 
@@ -203,7 +205,7 @@ declare namespace Action {
       minimum?: number;
       maximum?: number;
       multipleOf?: number;
-      enum?: readonly string[]|readonly number[];
+      enum?: readonly string[] | readonly number[];
     };
   }
 
@@ -218,7 +220,6 @@ declare namespace Action {
   }
 
   export interface ActionTypeClass<InputType = AnyType> {
-    // eslint-disable-next-line @typescript-eslint/no-misused-new
     new (thing: Thing, input: InputType): Action<InputType>;
   }
 }

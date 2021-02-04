@@ -11,7 +11,7 @@ import * as https from 'https';
 import * as os from 'os';
 import * as utils from './utils';
 import Thing from './thing';
-import {AnyType} from './types';
+import { AnyType } from './types';
 
 /**
  * A container for a single thing.
@@ -50,7 +50,6 @@ export class SingleThing {
   }
 }
 
-
 /**
  * A container for multiple things.
  */
@@ -75,7 +74,7 @@ export class MultipleThings {
    *
    * @param {Number|String} idx The index
    */
-  getThing(idx?: number|string): Thing|null {
+  getThing(idx?: number | string): Thing | null {
     idx = parseInt(idx as string);
     if (isNaN(idx) || idx < 0 || idx >= this.things.length) {
       return null;
@@ -103,14 +102,14 @@ export class MultipleThings {
  * Base handler that is initialized with a list of things.
  */
 abstract class BaseHandler {
-  protected things: SingleThing|MultipleThings;
+  protected things: SingleThing | MultipleThings;
 
   /**
    * Initialize the handler.
    *
    * @param {Object} things List of Things managed by the server
    */
-  constructor(things: SingleThing|MultipleThings) {
+  constructor(things: SingleThing | MultipleThings) {
     this.things = things;
   }
 
@@ -122,7 +121,7 @@ abstract class BaseHandler {
    * @param {Object} req The request object
    * @returns {Object} The thing, or null if not found.
    */
-  getThing(req: express.Request): Thing|null {
+  getThing(req: express.Request): Thing | null {
     return this.things.getThing(req.params.thingId);
   }
 }
@@ -147,8 +146,7 @@ class ThingsHandler extends BaseHandler {
           rel: 'alternate',
           href: `${wsHref}${thing.getHref()}`,
         });
-        description.base =
-          `${req.protocol}://${req.headers.host}${thing.getHref()}`;
+        description.base = `${req.protocol}://${req.headers.host}${thing.getHref()}`;
         description.securityDefinitions = {
           nosec_sc: {
             scheme: 'nosec',
@@ -184,8 +182,7 @@ class ThingHandler extends BaseHandler {
       rel: 'alternate',
       href: `${wsHref}${thing.getHref()}`,
     });
-    description.base =
-      `${req.protocol}://${req.headers.host}${thing.getHref()}`;
+    description.base = `${req.protocol}://${req.headers.host}${thing.getHref()}`;
     description.securityDefinitions = {
       nosec_sc: {
         scheme: 'nosec',
@@ -205,13 +202,15 @@ class ThingHandler extends BaseHandler {
   ws(ws: import('ws'), req: express.Request): void {
     const thing = this.getThing(req);
     if (thing === null) {
-      ws.send(JSON.stringify({
-        messageType: 'error',
-        data: {
-          status: '404 Not Found',
-          message: 'The requested thing was not found',
-        },
-      }));
+      ws.send(
+        JSON.stringify({
+          messageType: 'error',
+          data: {
+            status: '404 Not Found',
+            message: 'The requested thing was not found',
+          },
+        })
+      );
       return;
     }
 
@@ -229,13 +228,15 @@ class ThingHandler extends BaseHandler {
         message = JSON.parse(msg as string);
       } catch (e1) {
         try {
-          ws.send(JSON.stringify({
-            messageType: 'error',
-            data: {
-              status: '400 Bad Request',
-              message: 'Parsing request failed',
-            },
-          }));
+          ws.send(
+            JSON.stringify({
+              messageType: 'error',
+              data: {
+                status: '400 Bad Request',
+                message: 'Parsing request failed',
+              },
+            })
+          );
         } catch (e2) {
           // do nothing
         }
@@ -243,16 +244,17 @@ class ThingHandler extends BaseHandler {
         return;
       }
 
-      if (!message.hasOwnProperty('messageType') ||
-          !message.hasOwnProperty('data')) {
+      if (!message.hasOwnProperty('messageType') || !message.hasOwnProperty('data')) {
         try {
-          ws.send(JSON.stringify({
-            messageType: 'error',
-            data: {
-              status: '400 Bad Request',
-              message: 'Invalid message',
-            },
-          }));
+          ws.send(
+            JSON.stringify({
+              messageType: 'error',
+              data: {
+                status: '400 Bad Request',
+                message: 'Invalid message',
+              },
+            })
+          );
         } catch (e) {
           // do nothing
         }
@@ -267,13 +269,15 @@ class ThingHandler extends BaseHandler {
             try {
               thing.setProperty(propertyName, <AnyType>message.data[propertyName]);
             } catch (e) {
-              ws.send(JSON.stringify({
-                messageType: 'error',
-                data: {
-                  status: '400 Bad Request',
-                  message: e.message,
-                },
-              }));
+              ws.send(
+                JSON.stringify({
+                  messageType: 'error',
+                  data: {
+                    status: '400 Bad Request',
+                    message: e.message,
+                  },
+                })
+              );
             }
           }
 
@@ -291,14 +295,16 @@ class ThingHandler extends BaseHandler {
             if (action) {
               action.start();
             } else {
-              // eslint-disable-next-line object-curly-newline
-              ws.send(JSON.stringify({
-                messageType: 'error',
-                data: {
-                  status: '400 Bad Request',
-                  message: 'Invalid action request',
-                  request: message,
-                }}));
+              ws.send(
+                JSON.stringify({
+                  messageType: 'error',
+                  data: {
+                    status: '400 Bad Request',
+                    message: 'Invalid action request',
+                    request: message,
+                  },
+                })
+              );
             }
           }
 
@@ -313,14 +319,16 @@ class ThingHandler extends BaseHandler {
         }
         default: {
           try {
-            // eslint-disable-next-line object-curly-newline
-            ws.send(JSON.stringify({
-              messageType: 'error',
-              data: {
-                status: '400 Bad Request',
-                message: `Unknown messageType: ${messageType}`,
-                request: message,
-              }}));
+            ws.send(
+              JSON.stringify({
+                messageType: 'error',
+                data: {
+                  status: '400 Bad Request',
+                  message: `Unknown messageType: ${messageType}`,
+                  request: message,
+                },
+              })
+            );
           } catch (e) {
             // do nothing
           }
@@ -370,7 +378,7 @@ class PropertyHandler extends BaseHandler {
 
     const propertyName = req.params.propertyName;
     if (thing.hasProperty(propertyName)) {
-      res.json({[propertyName]: thing.getProperty(propertyName)});
+      res.json({ [propertyName]: thing.getProperty(propertyName) });
     } else {
       res.status(404).end();
     }
@@ -403,7 +411,7 @@ class PropertyHandler extends BaseHandler {
         return;
       }
 
-      res.json({[propertyName]: thing.getProperty(propertyName)});
+      res.json({ [propertyName]: thing.getProperty(propertyName) });
     } else {
       res.status(404).end();
     }
@@ -652,13 +660,13 @@ class EventHandler extends BaseHandler {
  * Server to represent a Web Thing over HTTP.
  */
 export class WebThingServer {
-  things: SingleThing|MultipleThings;
+  things: SingleThing | MultipleThings;
 
   name: string;
 
   port: number;
 
-  hostname: string|null;
+  hostname: string | null;
 
   basePath: string;
 
@@ -666,10 +674,10 @@ export class WebThingServer {
 
   hosts: string[];
 
-  app: express.Express & {isTls?: boolean};
+  app: express.Express & { isTls?: boolean };
 
   // HACK because the express types are weird
-  server: http.Server|https.Server;
+  server: http.Server | https.Server;
 
   router: expressWs.Router;
 
@@ -694,11 +702,11 @@ export class WebThingServer {
    *                                        lead to DNS rebinding attacks
    */
   constructor(
-    things: SingleThing|MultipleThings,
-    port: number|null = null,
-    hostname: string|null = null,
-    sslOptions: https.ServerOptions|null = null,
-    additionalRoutes: Record<string, express.RequestHandler>[]|null = null,
+    things: SingleThing | MultipleThings,
+    port: number | null = null,
+    hostname: string | null = null,
+    sslOptions: https.ServerOptions | null = null,
+    additionalRoutes: Record<string, express.RequestHandler>[] | null = null,
     basePath = '/',
     disableHostValidation = false
   ) {
@@ -742,8 +750,7 @@ export class WebThingServer {
     // Validate Host header
     this.app.use((request, response, next: () => unknown) => {
       const host = request.headers.host;
-      if (this.disableHostValidation ||
-          (host && this.hosts.includes(host.toLowerCase()))) {
+      if (this.disableHostValidation || (host && this.hosts.includes(host.toLowerCase()))) {
         next();
       } else {
         response.status(403).send('Forbidden');
@@ -753,10 +760,11 @@ export class WebThingServer {
     // Set CORS headers
     this.app.use((_request, response, next) => {
       response.setHeader('Access-Control-Allow-Origin', '*');
-      response.setHeader('Access-Control-Allow-Headers',
-                         'Origin, X-Requested-With, Content-Type, Accept');
-      response.setHeader('Access-Control-Allow-Methods',
-                         'GET, HEAD, PUT, POST, DELETE');
+      response.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
+      );
+      response.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, PUT, POST, DELETE');
       next();
     });
 
@@ -791,57 +799,49 @@ export class WebThingServer {
       this.router.get('/', (req, res) => thingsHandler.get(req, res));
       this.router.get('/:thingId', (req, res) => thingHandler.get(req, res));
       this.router.ws('/:thingId', (ws, req) => thingHandler.ws(ws, req));
-      this.router.get('/:thingId/properties',
-                      (req, res) => propertiesHandler.get(req, res));
-      this.router.get('/:thingId/properties/:propertyName',
-                      (req, res) => propertyHandler.get(req, res));
-      this.router.put('/:thingId/properties/:propertyName',
-                      (req, res) => propertyHandler.put(req, res));
-      this.router.get('/:thingId/actions',
-                      (req, res) => actionsHandler.get(req, res));
-      this.router.post('/:thingId/actions',
-                       (req, res) => actionsHandler.post(req, res));
-      this.router.get('/:thingId/actions/:actionName',
-                      (req, res) => actionHandler.get(req, res));
-      this.router.post('/:thingId/actions/:actionName',
-                       (req, res) => actionHandler.post(req, res));
-      this.router.get('/:thingId/actions/:actionName/:actionId',
-                      (req, res) => actionIdHandler.get(req, res));
-      this.router.put('/:thingId/actions/:actionName/:actionId',
-                      (req, res) => actionIdHandler.put(req, res));
-      this.router.delete('/:thingId/actions/:actionName/:actionId',
-                         (req, res) => actionIdHandler.delete(req, res));
-      this.router.get('/:thingId/events',
-                      (req, res) => eventsHandler.get(req, res));
-      this.router.get('/:thingId/events/:eventName',
-                      (req, res) => eventHandler.get(req, res));
+      this.router.get('/:thingId/properties', (req, res) => propertiesHandler.get(req, res));
+      this.router.get('/:thingId/properties/:propertyName', (req, res) =>
+        propertyHandler.get(req, res)
+      );
+      this.router.put('/:thingId/properties/:propertyName', (req, res) =>
+        propertyHandler.put(req, res)
+      );
+      this.router.get('/:thingId/actions', (req, res) => actionsHandler.get(req, res));
+      this.router.post('/:thingId/actions', (req, res) => actionsHandler.post(req, res));
+      this.router.get('/:thingId/actions/:actionName', (req, res) => actionHandler.get(req, res));
+      this.router.post('/:thingId/actions/:actionName', (req, res) => actionHandler.post(req, res));
+      this.router.get('/:thingId/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.get(req, res)
+      );
+      this.router.put('/:thingId/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.put(req, res)
+      );
+      this.router.delete('/:thingId/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.delete(req, res)
+      );
+      this.router.get('/:thingId/events', (req, res) => eventsHandler.get(req, res));
+      this.router.get('/:thingId/events/:eventName', (req, res) => eventHandler.get(req, res));
     } else {
       this.router.get('/', (req, res) => thingHandler.get(req, res));
       this.router.ws('/', (ws, req) => thingHandler.ws(ws, req));
-      this.router.get('/properties',
-                      (req, res) => propertiesHandler.get(req, res));
-      this.router.get('/properties/:propertyName',
-                      (req, res) => propertyHandler.get(req, res));
-      this.router.put('/properties/:propertyName',
-                      (req, res) => propertyHandler.put(req, res));
-      this.router.get('/actions',
-                      (req, res) => actionsHandler.get(req, res));
-      this.router.post('/actions',
-                       (req, res) => actionsHandler.post(req, res));
-      this.router.get('/actions/:actionName',
-                      (req, res) => actionHandler.get(req, res));
-      this.router.post('/actions/:actionName',
-                       (req, res) => actionHandler.post(req, res));
-      this.router.get('/actions/:actionName/:actionId',
-                      (req, res) => actionIdHandler.get(req, res));
-      this.router.put('/actions/:actionName/:actionId',
-                      (req, res) => actionIdHandler.put(req, res));
-      this.router.delete('/actions/:actionName/:actionId',
-                         (req, res) => actionIdHandler.delete(req, res));
-      this.router.get('/events',
-                      (req, res) => eventsHandler.get(req, res));
-      this.router.get('/events/:eventName',
-                      (req, res) => eventHandler.get(req, res));
+      this.router.get('/properties', (req, res) => propertiesHandler.get(req, res));
+      this.router.get('/properties/:propertyName', (req, res) => propertyHandler.get(req, res));
+      this.router.put('/properties/:propertyName', (req, res) => propertyHandler.put(req, res));
+      this.router.get('/actions', (req, res) => actionsHandler.get(req, res));
+      this.router.post('/actions', (req, res) => actionsHandler.post(req, res));
+      this.router.get('/actions/:actionName', (req, res) => actionHandler.get(req, res));
+      this.router.post('/actions/:actionName', (req, res) => actionHandler.post(req, res));
+      this.router.get('/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.get(req, res)
+      );
+      this.router.put('/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.put(req, res)
+      );
+      this.router.delete('/actions/:actionName/:actionId', (req, res) =>
+        actionIdHandler.delete(req, res)
+      );
+      this.router.get('/events', (req, res) => eventsHandler.get(req, res));
+      this.router.get('/events/:eventName', (req, res) => eventHandler.get(req, res));
     }
 
     this.app.use(this.basePath || '/', this.router);
@@ -865,11 +865,7 @@ export class WebThingServer {
       opts.txt.tls = '1';
     }
 
-    this.mdns = new dnssd.Advertisement(
-      new dnssd.ServiceType('_webthing._tcp'),
-      this.port!,
-      opts
-    );
+    this.mdns = new dnssd.Advertisement(new dnssd.ServiceType('_webthing._tcp'), this.port!, opts);
     this.mdns.on('error', (e) => {
       console.debug(`mDNS error: ${e}`);
       setTimeout(() => {
@@ -879,7 +875,7 @@ export class WebThingServer {
     this.mdns.start();
 
     return new Promise((resolve) => {
-      this.server.listen({port: this.port}, resolve);
+      this.server.listen({ port: this.port }, resolve);
     });
   }
 
@@ -893,26 +889,30 @@ export class WebThingServer {
     const promises: Promise<void>[] = [];
 
     if (this.mdns) {
-      promises.push(new Promise((resolve, reject) => {
-        this.mdns.stop(force, (error?: unknown) => {
+      promises.push(
+        new Promise((resolve, reject) => {
+          this.mdns.stop(force, (error?: unknown) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        })
+      );
+    }
+
+    promises.push(
+      new Promise((resolve, reject) => {
+        this.server.close((error) => {
           if (error) {
             reject(error);
           } else {
             resolve();
           }
         });
-      }));
-    }
-
-    promises.push(new Promise((resolve, reject) => {
-      this.server.close((error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    }));
+      })
+    );
 
     return Promise.all(promises);
   }

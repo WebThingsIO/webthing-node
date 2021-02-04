@@ -2,8 +2,8 @@
  * An observable, settable value interface.
  */
 
-import {EventEmitter} from 'events';
-import {AnyType} from './types';
+import { EventEmitter } from 'events';
+import { AnyType } from './types';
 
 /**
  * A property value.
@@ -16,10 +16,9 @@ import {AnyType} from './types';
  * new value.
  */
 class Value<ValueType = AnyType> extends EventEmitter {
-
   private lastValue: ValueType;
 
-  private valueForwarder: Value.Forwarder<ValueType>|null;
+  private valueForwarder: Value.Forwarder<ValueType> | null;
 
   /**
    * Initialize the object.
@@ -28,8 +27,7 @@ class Value<ValueType = AnyType> extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue: ValueType,
-              valueForwarder: Value.Forwarder<ValueType>|null = null) {
+  constructor(initialValue: ValueType, valueForwarder: Value.Forwarder<ValueType> | null = null) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
@@ -63,9 +61,7 @@ class Value<ValueType = AnyType> extends EventEmitter {
    * @param {*} value New value
    */
   notifyOfExternalUpdate(value: ValueType): void {
-    if (typeof value !== 'undefined' &&
-        value !== null &&
-        value !== this.lastValue) {
+    if (typeof value !== 'undefined' && value !== null && value !== this.lastValue) {
       this.lastValue = value;
       this.emit('update', value);
     }

@@ -4,7 +4,7 @@
 
 import Thing from './thing';
 import * as utils from './utils';
-import {AnyType, PrimitiveJsonType, Link} from './types';
+import { AnyType, PrimitiveJsonType, Link } from './types';
 
 /**
  * An Event represents an individual event from a thing.
@@ -14,7 +14,7 @@ class Event<Data = AnyType> {
 
   private name: string;
 
-  private data: Data|null;
+  private data: Data | null;
 
   private time: string;
 
@@ -45,7 +45,7 @@ class Event<Data = AnyType> {
     };
 
     if (this.data !== null) {
-      description[this.name].data = <AnyType><unknown> this.data;
+      description[this.name].data = <AnyType>(<unknown>this.data);
     }
 
     return description;
@@ -74,7 +74,7 @@ class Event<Data = AnyType> {
    *
    * @returns {*} The data.
    */
-  getData(): Data|null {
+  getData(): Data | null {
     return this.data;
   }
 
@@ -107,7 +107,7 @@ declare namespace Event {
     minimum?: number;
     maximum?: number;
     multipleOf?: number;
-    enum?: readonly string[]|readonly number[];
+    enum?: readonly string[] | readonly number[];
   }
 }
 
