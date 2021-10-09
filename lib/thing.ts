@@ -589,10 +589,11 @@ class Thing {
    * @param {Object} property The property that changed
    */
   propertyNotify(property: Property<AnyType>): void {
+    property.getValue().then((value) => {
     const message = JSON.stringify({
       messageType: 'propertyStatus',
       data: {
-        [property.getName()]: property.getValue(),
+          [property.getName()]: value,
       },
     });
 
@@ -603,6 +604,7 @@ class Thing {
         // do nothing
       }
     }
+    });
   }
 
   /**
