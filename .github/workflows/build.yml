@@ -31,7 +31,7 @@ jobs:
           npm ci
       - name: Check formatting
         run: |
-          npx prettier -c '*.ts' 'lib/*.ts' 'example/**/*.{js,ts}'
+          npx prettier -c 'src/*.ts' 'example/**/*.{js,ts}'
       - name: Lint with eslint
         run: |
           npm run lint
