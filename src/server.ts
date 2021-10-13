@@ -853,7 +853,8 @@ export class WebThingServer {
   }
 
   addThing(thing: Thing) {
-    if (this.things instanceof SingleThing) throw new Error("Cannot add new things when Webthings was instanciated with a SingleThing.");
+    if (this.things instanceof SingleThing)
+      throw new Error('Cannot add new things when Webthings was instanciated with a SingleThing.');
     const i = this.things.addThing(thing);
     thing.setHrefPrefix(`${this.basePath}/${i}`);
   }
