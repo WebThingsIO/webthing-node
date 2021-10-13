@@ -355,9 +355,11 @@ class Thing {
     const props: Record<string, unknown> = {};
     const promises: Promise<void>[] = [];
     for (const name in this.properties) {
-      promises.push(this.properties[name].getValue().then((value) => {
-        props[name] = value;
-      }));
+      promises.push(
+        this.properties[name].getValue().then((value) => {
+          props[name] = value;
+        })
+      );
     }
 
     return Promise.all(promises).then(() => props);
@@ -590,20 +592,20 @@ class Thing {
    */
   propertyNotify(property: Property<AnyType>): void {
     property.getValue().then((value) => {
-    const message = JSON.stringify({
-      messageType: 'propertyStatus',
-      data: {
+      const message = JSON.stringify({
+        messageType: 'propertyStatus',
+        data: {
           [property.getName()]: value,
-      },
-    });
+        },
+      });
 
-    for (const subscriber of this.subscribers) {
-      try {
-        subscriber.send(message);
-      } catch (e) {
-        // do nothing
+      for (const subscriber of this.subscribers) {
+        try {
+          subscriber.send(message);
+        } catch (e) {
+          // do nothing
+        }
       }
-    }
     });
   }
 

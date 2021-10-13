@@ -29,9 +29,11 @@ class Value<ValueType = AnyType> extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue: ValueType,
-              valueForwarder: Value.Forwarder<ValueType> | null = null,
-              valueRequestor: Value.Requestor<ValueType> | null = null) {
+  constructor(
+    initialValue: ValueType,
+    valueForwarder: Value.Forwarder<ValueType> | null = null,
+    valueRequestor: Value.Requestor<ValueType> | null = null
+  ) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
@@ -44,9 +46,9 @@ class Value<ValueType = AnyType> extends EventEmitter {
    * @param {*} value Value to set
    */
   set(value: ValueType): Promise<void> {
-    return Promise.resolve(
-      this.valueForwarder ? this.valueForwarder(value) : undefined
-    ).then(() => this.notifyOfExternalUpdate(value));
+    return Promise.resolve(this.valueForwarder ? this.valueForwarder(value) : undefined).then(() =>
+      this.notifyOfExternalUpdate(value)
+    );
   }
 
   /**

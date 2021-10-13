@@ -378,11 +378,14 @@ class PropertyHandler extends BaseHandler {
 
     const propertyName = req.params.propertyName;
     if (thing.hasProperty(propertyName)) {
-      thing.getProperty(propertyName).then((value) => {
-        res.json({ [propertyName]: value });
-      }).catch((e) => {
-        res.status(500).end(e.toString());
-      });
+      thing
+        .getProperty(propertyName)
+        .then((value) => {
+          res.json({ [propertyName]: value });
+        })
+        .catch((e) => {
+          res.status(500).end(e.toString());
+        });
     } else {
       res.status(404).end();
     }
@@ -408,7 +411,8 @@ class PropertyHandler extends BaseHandler {
     }
 
     if (thing.hasProperty(propertyName)) {
-      thing.setProperty(propertyName, req.body[propertyName])
+      thing
+        .setProperty(propertyName, req.body[propertyName])
         .then(() => thing.getProperty(propertyName))
         .then((value) => res.json({ [propertyName]: value }))
         .catch((e) => {
