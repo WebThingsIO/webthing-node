@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+pushd example
+npm install
+popd
+
 # clone the webthing-tester
 if [ ! -d webthing-tester ]; then
     git clone https://github.com/WebThingsIO/webthing-tester

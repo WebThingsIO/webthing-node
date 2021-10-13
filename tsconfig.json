@@ -10,6 +10,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "lib",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
