@@ -225,7 +225,7 @@ class ThingHandler extends BaseHandler {
         data: Record<string, unknown>;
       };
       try {
-        message = JSON.parse(msg as unknown as string);
+        message = JSON.parse((msg as unknown) as string);
       } catch (e1) {
         try {
           ws.send(
