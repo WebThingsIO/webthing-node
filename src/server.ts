@@ -225,7 +225,7 @@ class ThingHandler extends BaseHandler {
         data: Record<string, unknown>;
       };
       try {
-        message = JSON.parse(msg as string);
+        message = JSON.parse((msg as unknown) as string);
       } catch (e1) {
         try {
           ws.send(
@@ -274,7 +274,7 @@ class ThingHandler extends BaseHandler {
                   messageType: 'error',
                   data: {
                     status: '400 Bad Request',
-                    message: e.message,
+                    message: e instanceof Error ? e.message : 'unknown reason',
                   },
                 })
               );
