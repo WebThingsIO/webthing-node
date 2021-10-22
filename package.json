@@ -2,14 +2,14 @@
   "name": "webthing",
   "version": "0.15.0",
   "description": "HTTP Web Thing implementation",
-  "main": "webthing.js",
+  "main": "lib/webthing.js",
   "scripts": {
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "node": "NODE_PATH=. node",
     "start": "NODE_PATH=. node example/multiple-things",
     "test": "make test",
     "simplest": "NODE_PATH=. node example/simplest-thing",
-    "prettier": "npx prettier -w '*.ts' 'lib/*.ts' 'example/**/*.{js,ts}'",
+    "prettier": "npx prettier -w 'src/*.ts' 'example/**/*.{js,ts}'",
     "build": "tsc -p ."
   },
   "repository": {
@@ -28,7 +28,7 @@
     "url": "https://github.com/WebThingsIO/webthing-node/issues"
   },
   "homepage": "https://github.com/WebThingsIO/webthing-node#readme",
-  "types": "index.d.ts",
+  "types": "lib/index.d.ts",
   "dependencies": {
     "ajv": "^7.0.4",
     "body-parser": "^1.19.0",
