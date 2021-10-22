@@ -4,13 +4,14 @@
   "description": "HTTP Web Thing implementation",
   "main": "lib/webthing.js",
   "scripts": {
+    "build": "tsc -p .",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "node": "NODE_PATH=. node",
-    "start": "NODE_PATH=. node example/multiple-things",
-    "test": "make test",
-    "simplest": "NODE_PATH=. node example/simplest-thing",
+    "prepare": "husky install",
     "prettier": "npx prettier -w 'src/*.ts' 'example/**/*.{js,ts}'",
-    "build": "tsc -p ."
+    "simplest": "NODE_PATH=. node example/simplest-thing",
+    "start": "NODE_PATH=. node example/multiple-things",
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
+    "husky": "7.0.2",
     "typescript": "^4.1.3",
     "uuid": "^8.3.2"
   }
