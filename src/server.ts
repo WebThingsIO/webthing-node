@@ -65,8 +65,12 @@ export class MultipleThings {
    * @param {String} name The mDNS server name
    */
   constructor(things: Thing[], name: string) {
-    this.things = things;
+    this.things = things.slice();
     this.name = name;
+  }
+
+  addThing(thing: Thing): number {
+    return this.things.push(thing) - 1;
   }
 
   /**
@@ -846,6 +850,14 @@ export class WebThingServer {
 
     this.app.use(this.basePath || '/', this.router);
     this.server.on('request', this.app);
+  }
+
+  addThing(thing: Thing): void {
+    if (this.things instanceof SingleThing) {
+      throw new Error('Cannot add new things when Webthings was instanciated with a SingleThing.');
+    }
+    const i = this.things.addThing(thing);
+    thing.setHrefPrefix(`${this.basePath}/${i}`);
   }
 
   /**
