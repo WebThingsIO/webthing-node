@@ -337,13 +337,13 @@ class Thing {
    *
    * @returns {*} Current property value if found, else null
    */
-  getProperty(propertyName: string): unknown | null {
+  getProperty(propertyName: string): Promise<unknown | null> {
     const prop = this.findProperty(propertyName);
     if (prop) {
       return prop.getValue();
     }
 
-    return null;
+    return Promise.reject();
   }
 
   /**
@@ -351,13 +351,18 @@ class Thing {
    *
    * Returns an object of propertyName -> value.
    */
-  getProperties(): Record<string, unknown> {
+  getProperties(): Promise<Record<string, unknown>> {
     const props: Record<string, unknown> = {};
+    const promises: Promise<void>[] = [];
     for (const name in this.properties) {
-      props[name] = this.properties[name].getValue();
+      promises.push(
+        this.properties[name].getValue().then((value) => {
+          props[name] = value;
+        })
+      );
     }
 
-    return props;
+    return Promise.all(promises).then(() => props);
   }
 
   /**
@@ -377,13 +382,13 @@ class Thing {
    * @param {String} propertyName Name of the property to set
    * @param {*} value Value to set
    */
-  setProperty(propertyName: string, value: AnyType): void {
+  setProperty(propertyName: string, value: AnyType): Promise<void> {
     const prop = this.findProperty(propertyName);
     if (!prop) {
-      return;
+      return Promise.reject();
     }
 
-    prop.setValue(value);
+    return prop.setValue(value);
   }
 
   /**
@@ -586,20 +591,22 @@ class Thing {
    * @param {Object} property The property that changed
    */
   propertyNotify(property: Property<AnyType>): void {
-    const message = JSON.stringify({
-      messageType: 'propertyStatus',
-      data: {
-        [property.getName()]: property.getValue(),
-      },
-    });
+    property.getValue().then((value) => {
+      const message = JSON.stringify({
+        messageType: 'propertyStatus',
+        data: {
+          [property.getName()]: value,
+        },
+      });
 
-    for (const subscriber of this.subscribers) {
-      try {
-        subscriber.send(message);
-      } catch (e) {
-        // do nothing
+      for (const subscriber of this.subscribers) {
+        try {
+          subscriber.send(message);
+        } catch (e) {
+          // do nothing
+        }
       }
-    }
+    });
   }
 
   /**

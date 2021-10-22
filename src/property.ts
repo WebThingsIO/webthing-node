@@ -118,7 +118,7 @@ class Property<ValueType = AnyType> {
    *
    * @returns {*} The current value
    */
-  getValue(): ValueType {
+  getValue(): Promise<ValueType> {
     return this.value.get();
   }
 
@@ -127,9 +127,9 @@ class Property<ValueType = AnyType> {
    *
    * @param {*} value The value to set
    */
-  setValue(value: ValueType): void {
+  setValue(value: ValueType): Promise<void> {
     this.validateValue(value);
-    this.value.set(value);
+    return this.value.set(value);
   }
 
   /**

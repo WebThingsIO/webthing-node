@@ -20,6 +20,8 @@ class Value<ValueType = AnyType> extends EventEmitter {
 
   private valueForwarder: Value.Forwarder<ValueType> | null;
 
+  private valueRequestor: Value.Requestor<ValueType> | null;
+
   /**
    * Initialize the object.
    *
@@ -27,10 +29,15 @@ class Value<ValueType = AnyType> extends EventEmitter {
    * @param {function?} valueForwarder The method that updates the actual value
    *                                   on the thing
    */
-  constructor(initialValue: ValueType, valueForwarder: Value.Forwarder<ValueType> | null = null) {
+  constructor(
+    initialValue: ValueType,
+    valueForwarder: Value.Forwarder<ValueType> | null = null,
+    valueRequestor: Value.Requestor<ValueType> | null = null
+  ) {
     super();
     this.lastValue = initialValue;
     this.valueForwarder = valueForwarder;
+    this.valueRequestor = valueRequestor;
   }
 
   /**
@@ -38,12 +45,10 @@ class Value<ValueType = AnyType> extends EventEmitter {
    *
    * @param {*} value Value to set
    */
-  set(value: ValueType): void {
-    if (this.valueForwarder) {
-      this.valueForwarder(value);
-    }
-
-    this.notifyOfExternalUpdate(value);
+  set(value: ValueType): Promise<void> {
+    return Promise.resolve(this.valueForwarder ? this.valueForwarder(value) : undefined).then(() =>
+      this.notifyOfExternalUpdate(value)
+    );
   }
 
   /**
@@ -51,8 +56,14 @@ class Value<ValueType = AnyType> extends EventEmitter {
    *
    * @returns the value.
    */
-  get(): ValueType {
-    return this.lastValue;
+  get(): Promise<ValueType> {
+    if (this.valueRequestor) {
+      return Promise.resolve(this.valueRequestor()).then((newValue) => {
+        this.notifyOfExternalUpdate(newValue);
+        return newValue;
+      });
+    }
+    return Promise.resolve(this.lastValue);
   }
 
   /**
@@ -69,7 +80,8 @@ class Value<ValueType = AnyType> extends EventEmitter {
 }
 
 declare namespace Value {
-  export type Forwarder<T> = (value: T) => void;
+  export type Forwarder<T> = (value: T) => void | Promise<void>;
+  export type Requestor<T> = () => T | Promise<T>;
 }
 
 export = Value;

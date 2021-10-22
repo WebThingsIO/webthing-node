@@ -225,7 +225,7 @@ class ThingHandler extends BaseHandler {
         data: Record<string, unknown>;
       };
       try {
-        message = JSON.parse(msg as string);
+        message = JSON.parse((msg as unknown) as string);
       } catch (e1) {
         try {
           ws.send(
@@ -274,7 +274,7 @@ class ThingHandler extends BaseHandler {
                   messageType: 'error',
                   data: {
                     status: '400 Bad Request',
-                    message: e.message,
+                    message: e instanceof Error ? e.message : 'unknown reason',
                   },
                 })
               );
@@ -378,7 +378,14 @@ class PropertyHandler extends BaseHandler {
 
     const propertyName = req.params.propertyName;
     if (thing.hasProperty(propertyName)) {
-      res.json({ [propertyName]: thing.getProperty(propertyName) });
+      thing
+        .getProperty(propertyName)
+        .then((value) => {
+          res.json({ [propertyName]: value });
+        })
+        .catch((e) => {
+          res.status(500).end(e.toString());
+        });
     } else {
       res.status(404).end();
     }
@@ -399,19 +406,18 @@ class PropertyHandler extends BaseHandler {
 
     const propertyName = req.params.propertyName;
     if (!req.body.hasOwnProperty(propertyName)) {
-      res.status(400).end();
+      res.status(404).end();
       return;
     }
 
     if (thing.hasProperty(propertyName)) {
-      try {
-        thing.setProperty(propertyName, req.body[propertyName]);
-      } catch (e) {
-        res.status(400).end();
-        return;
-      }
-
-      res.json({ [propertyName]: thing.getProperty(propertyName) });
+      thing
+        .setProperty(propertyName, req.body[propertyName])
+        .then(() => thing.getProperty(propertyName))
+        .then((value) => res.json({ [propertyName]: value }))
+        .catch((e) => {
+          res.status(500).end(e.toString());
+        });
     } else {
       res.status(404).end();
     }
